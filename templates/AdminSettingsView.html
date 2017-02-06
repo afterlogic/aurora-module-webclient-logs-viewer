@@ -1,0 +1,56 @@
+<div class="middle_bar">
+	<div class="panel_top">
+		<h2 class="settings_heading" data-bind="i18n: {'key': '%MODULENAME%/HEADING_SETTINGS_TAB'}"></h2>
+	</div>
+	<div class="panel_center">
+		<div class="fields">
+			<div class="fieldset">
+				<div class="row">
+					<span class="value">
+						<label class="custom_checkbox" data-bind="css: {'checked': enableLogging}">
+							<span class="icon"></span>
+							<input type="checkbox" id="enableLogging" data-bind="checked: enableLogging" />
+						</label>
+						<label for="enableLogging" data-bind="i18n: {'key': '%MODULENAME%/LABEL_LOGGING_ENABLE'}"></label>
+					</span>
+				</div>
+				<div class="row">
+					<span class="label" data-bind="i18n: {'key': '%MODULENAME%/LABEL_LOGGING_VERBOSITY'}"></span>
+					<select class="value input" data-bind="options: aLoggingLevelOptions, optionsText: 'label', optionsValue: 'value', value: loggingLevel"></select>
+				</div>
+				<div class="row buttons" style="margin-bottom: 6px;">
+					<span class="button" data-bind="click: download, i18n: {'key': '%MODULENAME%/BUTTON_LOGGING_DOWNLOAD'}" style="float: left;"></span>
+					<span class="button" data-bind="click: clear, i18n: {'key': '%MODULENAME%/BUTTON_LOGGING_CLEAR'}" style="float: right;"></span>
+				</div>
+				<div class="row buttons" style="margin-bottom: 26px;">
+					<span class="button" data-bind="click: view, i18n: {'key': '%MODULENAME%/BUTTON_LOGGING_VIEW'}" style="float: left;"></span>
+				</div>
+				<div class="row">
+					<span class="value">
+						<label class="custom_checkbox" data-bind="css: {'checked': enableEventLogging}">
+							<span class="icon"></span>
+							<input type="checkbox" id="enableEventLogging" data-bind="checked: enableEventLogging" />
+						</label>
+						<label for="enableEventLogging" data-bind="i18n: {'key': '%MODULENAME%/LABEL_LOGGING_ENABLE_EVENTS'}"></label>
+					</span>
+				</div>
+				<div class="row buttons" style="margin-bottom: 6px;">
+					<span class="button" data-bind="click: download.bind($data, 'event'), i18n: {'key': '%MODULENAME%/BUTTON_LOGGING_DOWNLOAD_EVENTS'}" style="float: left;"></span>
+					<span class="button" data-bind="click: clear.bind($data, 'event'), i18n: {'key': '%MODULENAME%/BUTTON_LOGGING_CLEAR'}" style="float: right;"></span>
+				</div>
+				<div class="row buttons">
+					<span class="button" data-bind="click: view.bind($data, 'event'), i18n: {'key': '%MODULENAME%/BUTTON_LOGGING_VIEW'}" style="float: left;"></span>
+				</div>
+			</div>		
+
+			<div class="buttons">
+				<span class="button" data-bind="click: save, visible: !isSaving()">
+					<span data-bind="i18n: {'key': 'COREWEBCLIENT/ACTION_SAVE'}"></span>
+				</span>
+				<span class="button" data-bind="visible: isSaving()">
+					<span data-bind="i18n: {'key': 'COREWEBCLIENT/ACTION_SAVE_IN_PROGRESS'}"></span>
+				</span>
+			</div>
+		</div>
+	</div>
+</div>
