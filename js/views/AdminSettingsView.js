@@ -8,8 +8,10 @@ var
 	
 	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
 	
+	Api = require('%PathToCoreWebclientModule%/js/Api.js'),
 	Settings = require('%PathToCoreWebclientModule%/js/Settings.js'),
 	WindowOpener = require('%PathToCoreWebclientModule%/js/WindowOpener.js'),
+	Screens = require('%PathToCoreWebclientModule%/js/Screens.js'),
 	
 	ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
 	CAbstractSettingsFormView = ModulesManager.run('AdminPanelWebclient', 'getAbstractSettingsFormViewClass')
@@ -106,31 +108,33 @@ CLoggingAdminSettingsView.prototype.download = function (type)
 {
 	var bUseEventLog = type === "event" ? true : false;
 	
-//	Ajax.sMethod, oParameters, fResponseHandler, oContext
-	console.log('download', arguments);
+	Ajax.coreSend('GetLogFile', {}, function (oResponse) {
+		console.log('download', oResponse);
+	}, this);
 };
 
 CLoggingAdminSettingsView.prototype.view = function ()
 {
-	console.log('view', arguments);
-	
 	Ajax.coreSend('GetLog', {}, function (oResponse) {
-		
-		if (oResponse && oResponse.Result) {
+		if (oResponse && oResponse.Result)
+		{
 			var oWin = WindowOpener.open('', 'Logsviwer', true);
-			console.log(oResponse.Result);
 			oWin.document.write('<pre>'+oResponse.Result+'</pre>');
 		}
-//		console.log('GetLog', arguments);
 	}, this);
-	
 };
 
 CLoggingAdminSettingsView.prototype.clear = function ()
 {
-	console.log('clear', arguments);
-	Ajax.coreSend('ClearLog', {}, function () {
-		console.log('ClearLog', arguments);
+	Ajax.coreSend('ClearLog', {}, function (oResponse) {
+		if (oResponse && oResponse.Result)
+		{
+			Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_CLEAR_LOG'));
+		}
+		else
+		{
+			Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_CLEAR_LOG'));
+		}
 	}, this);
 };
 
