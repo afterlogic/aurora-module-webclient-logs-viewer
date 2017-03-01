@@ -22,7 +22,7 @@ class LogsViewerWebclientModule extends \Aurora\System\AbstractModule
 	 */
 	public function GetSettings()
 	{
-		\CApi::checkUserRoleIsAtLeast(\EUserRole::Anonymous);
+		\Aurora\System\Api::checkUserRoleIsAtLeast(\EUserRole::Anonymous);
 		
 		$oUser = \Aurora\System\Api::getAuthenticatedUser();
 		if (!empty($oUser) && ($oUser->Role === \EUserRole::NormalUser && $this->isEnabledForEntity($oUser) || $oUser->Role === \EUserRole::SuperAdmin))
@@ -114,7 +114,7 @@ class LogsViewerWebclientModule extends \Aurora\System\AbstractModule
 		\Aurora\System\Api::checkUserRoleIsAtLeast(\EUserRole::SuperAdmin);
 		
 		$oUser = null;
-		$oCoreDecorator = \CApi::GetModuleDecorator('Core');
+		$oCoreDecorator = \Aurora\System\Api::GetModuleDecorator('Core');
 		if ($oCoreDecorator)
 		{
 			$oUser = $oCoreDecorator->GetUser($UserId);
