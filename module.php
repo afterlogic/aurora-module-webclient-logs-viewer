@@ -2,7 +2,7 @@
 
 namespace Aurora\Modules;
 
-class LogsViewerWebclientModule extends \Aurora\System\AbstractModule
+class LogsViewerWebclientModule extends \Aurora\System\Module\AbstractModule
 {
 	public function init() 
 	{
