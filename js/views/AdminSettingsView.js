@@ -2,16 +2,17 @@
 
 var
 	_ = require('underscore'),
+	$ = require('jquery'),
 	ko = require('knockout'),
+	FileSaver = require('%PathToCoreWebclientModule%/js/vendors/FileSaver.js'),
 	
 	TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
+	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
 	
-	Ajax = require('modules/%ModuleName%/js/Ajax.js'),
-	
-	Api = require('%PathToCoreWebclientModule%/js/Api.js'),
-	Settings = require('%PathToCoreWebclientModule%/js/Settings.js'),
+	Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js'),
 	WindowOpener = require('%PathToCoreWebclientModule%/js/WindowOpener.js'),
-	Screens = require('%PathToCoreWebclientModule%/js/Screens.js'),
+	
+	Settings = require('modules/%ModuleName%/js/Settings.js'),
 	
 	ModulesManager = require('%PathToCoreWebclientModule%/js/ModulesManager.js'),
 	CAbstractSettingsFormView = ModulesManager.run('AdminPanelWebclient', 'getAbstractSettingsFormViewClass')
@@ -22,46 +23,107 @@ var
 */
 function CLoggingAdminSettingsView()
 {
-	CAbstractSettingsFormView.call(this, Settings.ServerModuleName);
+	CAbstractSettingsFormView.call(this, 'Core');
 	
+	this.iViewLogSizeBytes = 10240;
+	this.aLevelOptions = [
+		{text: TextUtils.i18n('%MODULENAME%/LABEL_LOGGING_DEBUG'), value: Enums.LogLevel.Full},
+		{text: TextUtils.i18n('%MODULENAME%/LABEL_LOGGING_WARNINGS'), value: Enums.LogLevel.Warning},
+		{text: TextUtils.i18n('%MODULENAME%/LABEL_LOGGING_ERRORS'), value: Enums.LogLevel.Error}
+	];
+	
+	this.logSize = ko.observable(Settings.LogSizeBytes);
+	this.downloadLogText = ko.computed(function () {
+		return TextUtils.i18n('%MODULENAME%/BUTTON_LOGGING_DOWNLOAD', {'SIZE': TextUtils.getFriendlySize(this.logSize())});
+	}, this);
+	this.viewLogText = ko.computed(function () {
+		if (this.logSize() < this.iViewLogSizeBytes)
+		{
+			return TextUtils.i18n('%MODULENAME%/BUTTON_LOGGING_VIEW');
+		}
+		else
+		{
+			return TextUtils.i18n('%MODULENAME%/BUTTON_LOGGING_VIEW_LAST', {'SIZE': TextUtils.getFriendlySize(this.iViewLogSizeBytes)});
+		}
+	}, this);
+	this.eventsLogSize = ko.observable(Settings.EventLogSizeBytes);
+	this.downloadEventsLogText = ko.computed(function () {
+		return TextUtils.i18n('%MODULENAME%/BUTTON_LOGGING_DOWNLOAD_EVENTS', {'SIZE': TextUtils.getFriendlySize(this.eventsLogSize())});
+	}, this);
+	this.viewEventsLogText = ko.computed(function () {
+		if (this.eventsLogSize() < this.iViewLogSizeBytes)
+		{
+			return TextUtils.i18n('%MODULENAME%/BUTTON_LOGGING_VIEW');
+		}
+		else
+		{
+			return TextUtils.i18n('%MODULENAME%/BUTTON_LOGGING_VIEW_LAST', {'SIZE': TextUtils.getFriendlySize(this.iViewLogSizeBytes)});
+		}
+	}, this);
+	
+	this.usersWithSeparateLog = ko.observableArray([]);
+	
+	/* Editable fields */
 	this.enableLogging = ko.observable(Settings.EnableLogging);
 	this.enableEventLogging = ko.observable(Settings.EnableEventLogging);
 	this.loggingLevel = ko.observable(Settings.LoggingLevel);
-	
-	this.aLoggingLevelOptions = [
-		{
-			label: TextUtils.i18n('%MODULENAME%/LABEL_LOGGING_DEBUG'),
-			value: Enums.LogLevel.Full
-		},
-		{
-			label: TextUtils.i18n('%MODULENAME%/LABEL_LOGGING_WARNINGS'),
-			value: Enums.LogLevel.Warning
-		},
-		{
-			label: TextUtils.i18n('%MODULENAME%/LABEL_LOGGING_ERRORS'),
-			value: Enums.LogLevel.Error
-		},
-		{
-			label: TextUtils.i18n('%MODULENAME%/LABEL_LOGGING_SPEC_USER'),
-			value: Enums.LogLevel.Spec
-		}
-	];
+	/*-- Editable fields */
 }
 
 _.extendOwn(CLoggingAdminSettingsView.prototype, CAbstractSettingsFormView.prototype);
 
 CLoggingAdminSettingsView.prototype.ViewTemplate = '%ModuleName%_AdminSettingsView';
 
-CLoggingAdminSettingsView.prototype.getCurrentValues = function()
+CLoggingAdminSettingsView.prototype.onRouteChild = function ()
+{
+	this.setUpdateStatusTimer();
+	Ajax.send(Settings.ServerModuleName, 'GetUsersWithSeparateLog', null, function (oResponse) {
+		if (oResponse.Result && _.isArray(oResponse.Result))
+		{
+			this.usersWithSeparateLog(oResponse.Result);
+		}
+	}, this);
+};
+
+CLoggingAdminSettingsView.prototype.turnOffSeparateLogs = function ()
+{
+	this.usersWithSeparateLog([]);
+	Ajax.send(Settings.ServerModuleName, 'TurnOffSeparateLogs');
+};
+
+CLoggingAdminSettingsView.prototype.clearSeparateLogs = function ()
+{
+	Ajax.send(Settings.ServerModuleName, 'ClearSeparateLogs');
+};
+
+CLoggingAdminSettingsView.prototype.setUpdateStatusTimer = function ()
+{
+	if (this.bShown)
+	{
+		setTimeout(_.bind(function () {
+			Ajax.send(Settings.ServerModuleName, 'GetLogFilesData', null, function (oResponse) {
+				if (oResponse.Result)
+				{
+					Settings.updateLogsData(oResponse.Result);
+					this.logSize(Settings.LogSizeBytes);
+					this.eventsLogSize(Settings.EventLogSizeBytes);
+				}
+				this.setUpdateStatusTimer();
+			}, this);
+		}, this), 5000);
+	}
+};
+
+CLoggingAdminSettingsView.prototype.getCurrentValues = function ()
 {
 	return [
 		this.enableLogging(),
 		this.enableEventLogging(),
-		this.loggingLevel()
+		Types.pInt(this.loggingLevel())
 	];
 };
 
-CLoggingAdminSettingsView.prototype.revertGlobalValues = function()
+CLoggingAdminSettingsView.prototype.revertGlobalValues = function ()
 {
 	this.enableLogging(Settings.EnableLogging);
 	this.enableEventLogging(Settings.EnableEventLogging);
@@ -73,7 +135,7 @@ CLoggingAdminSettingsView.prototype.getParametersForSave = function ()
 	return {
 		'EnableLogging': this.enableLogging(),
 		'EnableEventLogging': this.enableEventLogging(),
-		'LoggingLevel': this.loggingLevel()
+		'LoggingLevel': Types.pInt(this.loggingLevel())
 	};
 };
 
@@ -82,7 +144,7 @@ CLoggingAdminSettingsView.prototype.getParametersForSave = function ()
  */
 CLoggingAdminSettingsView.prototype.applySavedValues = function (oParameters)
 {
-	Settings.update(oParameters.EnableLogging, oParameters.EnableEventLogging, oParameters.LoggingLevel);
+	Settings.updateLogging(oParameters.EnableLogging, oParameters.EnableEventLogging, oParameters.LoggingLevel);
 };
 
 CLoggingAdminSettingsView.prototype.setAccessLevel = function (sEntityType, iEntityId)
@@ -90,50 +152,44 @@ CLoggingAdminSettingsView.prototype.setAccessLevel = function (sEntityType, iEnt
 	this.visible(sEntityType === '');
 };
 
-/**
- * Sends a request to the server to save the settings.
- */
-CLoggingAdminSettingsView.prototype.save = function ()
+CLoggingAdminSettingsView.prototype.downloadLog = function (bEventsLog, sPublicId)
 {
-	if (!_.isFunction(this.validateBeforeSave) || this.validateBeforeSave())
-	{
-		this.isSaving(true);
-
-		Ajax.coreSend('UpdateLoggingSettings', this.getParametersForSave(), this.onResponse, this);
-	}
+	Ajax.send(Settings.ServerModuleName, 'GetLogFile', {'EventsLog': bEventsLog, 'PublicId': sPublicId || ''}, function (oResponse) {
+		var
+			oBlob = new Blob([oResponse.ResponseText], {'type': 'text/plain;charset=utf-8'}),
+			sFilePrefix = Types.pString(sPublicId) !== '' ? sPublicId + '-' : ''
+		;
+		FileSaver.saveAs(oBlob, bEventsLog ? Settings.EventLogFileName : sFilePrefix + Settings.LogFileName);
+	}, this, undefined, { Format: 'Raw' });
 };
 
-
-CLoggingAdminSettingsView.prototype.download = function (type)
+CLoggingAdminSettingsView.prototype.viewLog = function (bEventsLog)
 {
-	var bUseEventLog = type === "event" ? true : false;
-	
-	Ajax.coreSend('GetLogFile', {}, function (oResponse) {
-		console.log('download', oResponse);
-	}, this);
-};
-
-CLoggingAdminSettingsView.prototype.view = function ()
-{
-	Ajax.coreSend('GetLog', {}, function (oResponse) {
-		if (oResponse && oResponse.Result)
+	Ajax.send(Settings.ServerModuleName, 'GetLog', {'EventsLog': bEventsLog}, function (oResponse) {
+		if (oResponse.Result)
 		{
-			var oWin = WindowOpener.open('', 'Logsviwer', true);
-			oWin.document.write('<pre>'+oResponse.Result+'</pre>');
+			var oWin = WindowOpener.open('', 'view-log');
+			if (oWin)
+			{
+				$(oWin.document.body).html('<pre>' + oResponse.Result + '</pre>');
+			}
 		}
 	}, this);
 };
 
-CLoggingAdminSettingsView.prototype.clear = function ()
+CLoggingAdminSettingsView.prototype.clearLog = function (bEventsLog)
 {
-	Ajax.coreSend('ClearLog', {}, function (oResponse) {
-		if (oResponse && oResponse.Result)
+	Ajax.send(Settings.ServerModuleName, 'ClearLog', {'EventsLog': bEventsLog}, function (oResponse) {
+		if (oResponse.Result)
 		{
-			Screens.showReport(TextUtils.i18n('%MODULENAME%/REPORT_CLEAR_LOG'));
-		}
-		else
-		{
-			Screens.showError(TextUtils.i18n('%MODULENAME%/ERROR_CLEAR_LOG'));
+			if (bEventsLog)
+			{
+				this.eventsLogSize(0);
+			}
+			else
+			{
+				this.logSize(0);
+			}
 		}
 	}, this);
 };

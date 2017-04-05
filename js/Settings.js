@@ -1,14 +1,18 @@
 'use strict';
 
+var Types = require('%PathToCoreWebclientModule%/js/utils/Types.js');
+
 module.exports = {
 	ServerModuleName: 'LogsViewerWebclient',
 	HashModuleName: 'logs-viewer',
 	
-	EnableLogging: '',
-	EnableEventLogging: '',
-	LoggingLevel: '',
-//	LogFileName: '',
-
+	EnableLogging: false,
+	EnableEventLogging: false,
+	LoggingLevel: 0,
+	LogSizeBytes: 0,
+	EventLogSizeBytes: 0,
+	LogFileName: '',
+	EventLogFileName: '',
 	
 	/**
 	 * Initializes settings of the module.
@@ -17,30 +21,28 @@ module.exports = {
 	 */
 	init: function (oAppDataSection)
 	{
-		console.log(oAppDataSection);
-		
 		if (oAppDataSection)
 		{
 			this.EnableLogging = !!oAppDataSection.EnableLogging;
 			this.EnableEventLogging = !!oAppDataSection.EnableEventLogging;
-			this.LoggingLevel = oAppDataSection.LoggingLevel;
-			
+			this.LoggingLevel = Types.pInt(oAppDataSection.LoggingLevel);
+			this.updateLogsData(oAppDataSection.LogFilesData);
 			this.ELogLevel = oAppDataSection.ELogLevel;
 		}
 	},
 	
-	/**
-	 * Updates admin module settings after editing.
-	 * 
-	 * @param {int} iAuthMode
-	 */
-	update: function (EnableLogging, EnableEventLogging, LoggingLevel)
+	updateLogging: function (bEnableLogging, bEnableEventLogging, iLoggingLevel)
 	{
-		console.log('updateAdmin', arguments);
-		this.LoggingLevel = LoggingLevel;
-		
-		this.EnableLogging = EnableLogging;
-		this.EnableEventLogging = EnableEventLogging;
-		this.LoggingLevel = LoggingLevel;
+		this.EnableLogging = !!bEnableLogging;
+		this.EnableEventLogging = !!bEnableEventLogging;
+		this.LoggingLevel = Types.pInt(iLoggingLevel);
+	},
+	
+	updateLogsData: function (oLogFilesData)
+	{
+		this.LogSizeBytes = Types.pInt(oLogFilesData.LogSizeBytes);
+		this.EventLogSizeBytes = Types.pInt(oLogFilesData.EventLogSizeBytes);
+		this.LogFileName = Types.pString(oLogFilesData.LogFileName);
+		this.EventLogFileName = Types.pString(oLogFilesData.EventLogFileName);
 	}
 };

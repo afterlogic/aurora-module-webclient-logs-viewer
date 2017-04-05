@@ -31,7 +31,7 @@ module.exports = function (oAppData) {
 						);
 					},
 					Settings.HashModuleName,
-					TextUtils.i18n('%MODULENAME%/LABEL_SETTINGS_TAB')
+					TextUtils.i18n('%MODULENAME%/LABEL_LOGGING_SETTINGS_TAB')
 				]);
 			}
 		};
