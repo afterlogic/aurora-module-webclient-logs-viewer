@@ -17,36 +17,36 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 {
 	public function GetUsersWithSeparateLog()
 	{
-		return \Aurora\System\Api::GetModuleDecorator('Core')->GetUsersWithSeparateLog();
+		return \Aurora\Modules\Core\Module::Decorator()->GetUsersWithSeparateLog();
 	}
 	
 	public function TurnOffSeparateLogs()
 	{
-		return \Aurora\System\Api::GetModuleDecorator('Core')->TurnOffSeparateLogs();
+		return \Aurora\Modules\Core\Module::Decorator()->TurnOffSeparateLogs();
 	}
 	
 	public function ClearSeparateLogs()
 	{
-		return \Aurora\System\Api::GetModuleDecorator('Core')->ClearSeparateLogs();
+		return \Aurora\Modules\Core\Module::Decorator()->ClearSeparateLogs();
 	}
 
 	public function GetLogFilesData()
 	{
-		return \Aurora\System\Api::GetModuleDecorator('Core')->GetLogFilesData();
+		return \Aurora\Modules\Core\Module::Decorator()->GetLogFilesData();
 	}
 	
 	public function GetLogFile($EventsLog = false, $PublicId = '')
 	{
-		return \Aurora\System\Api::GetModuleDecorator('Core')->GetLogFile($EventsLog, $PublicId);
+		return \Aurora\Modules\Core\Module::Decorator()->GetLogFile($EventsLog, $PublicId);
 	}
 	
 	public function GetLog($EventsLog, $PartSize = 10240)
 	{
-		return \Aurora\System\Api::GetModuleDecorator('Core')->GetLog($EventsLog, $PartSize);
+		return \Aurora\Modules\Core\Module::Decorator()->GetLog($EventsLog, $PartSize);
 	}
 	
 	public function ClearLog($EventsLog)
 	{
-		return \Aurora\System\Api::GetModuleDecorator('Core')->ClearLog($EventsLog);
+		return \Aurora\Modules\Core\Module::Decorator()->ClearLog($EventsLog);
 	}
 }
