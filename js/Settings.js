@@ -1,6 +1,10 @@
 'use strict';
 
-var Types = require('%PathToCoreWebclientModule%/js/utils/Types.js');
+var
+	_ = require('underscore'),
+	
+	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js')
+;
 
 module.exports = {
 	ServerModuleName: 'LogsViewerWebclient',
@@ -15,22 +19,32 @@ module.exports = {
 	EventLogFileName: '',
 	
 	/**
-	 * Initializes settings of the module.
+	 * Initializes settings from AppData object sections.
 	 * 
-	 * @param {Object} oAppDataSection module section in AppData.
+	 * @param {Object} oAppData Object contained modules settings.
 	 */
-	init: function (oAppDataSection)
+	init: function (oAppData)
 	{
-		if (oAppDataSection)
+		var oAppDataSection = oAppData['Core'];
+		
+		if (!_.isEmpty(oAppDataSection))
 		{
-			this.EnableLogging = !!oAppDataSection.EnableLogging;
-			this.EnableEventLogging = !!oAppDataSection.EnableEventLogging;
-			this.LoggingLevel = Types.pInt(oAppDataSection.LoggingLevel);
-			this.updateLogsData(oAppDataSection.LogFilesData);
-			this.ELogLevel = oAppDataSection.ELogLevel;
+			this.ELogLevel = Types.pObject(oAppDataSection.ELogLevel);
+			
+			this.EnableLogging = Types.pBool(oAppDataSection.EnableLogging);
+			this.EnableEventLogging = Types.pBool(oAppDataSection.EnableEventLogging);
+			this.LoggingLevel = Types.pEnum(oAppDataSection.LoggingLevel, this.ELogLevel, this.LoggingLevel);
+			this.updateLogsData(Types.pObject(oAppDataSection.LogFilesData));
 		}
 	},
 	
+	/**
+	 * Updates new settings values after saving on server.
+	 * 
+	 * @param {boolean} bEnableLogging
+	 * @param {boolean} bEnableEventLogging
+	 * @param {number} iLoggingLevel
+	 */
 	updateLogging: function (bEnableLogging, bEnableEventLogging, iLoggingLevel)
 	{
 		this.EnableLogging = !!bEnableLogging;
@@ -38,6 +52,11 @@ module.exports = {
 		this.LoggingLevel = Types.pInt(iLoggingLevel);
 	},
 	
+	/**
+	 * Updates new settings values after requesting from server.
+	 * 
+	 * @param {Object} oLogFilesData
+	 */
 	updateLogsData: function (oLogFilesData)
 	{
 		this.LogSizeBytes = Types.pInt(oLogFilesData.LogSizeBytes);

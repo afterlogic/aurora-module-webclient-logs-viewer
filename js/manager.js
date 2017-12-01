@@ -6,15 +6,12 @@ module.exports = function (oAppData) {
 	if (App.getUserRole() === Enums.UserRole.SuperAdmin)
 	{
 		var
-			_ = require('underscore'),
-			
 			TextUtils = require('%PathToCoreWebclientModule%/js/utils/Text.js'),
 			
-			Settings = require('modules/%ModuleName%/js/Settings.js'),
-			oSettings = _.extend({}, oAppData['Core'] || {}, oAppData['%ModuleName%'] || {})
+			Settings = require('modules/%ModuleName%/js/Settings.js')
 		;
 
-		Settings.init(oSettings);
+		Settings.init(oAppData);
 
 		require('modules/%ModuleName%/js/enums.js');
 
