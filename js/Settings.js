@@ -17,6 +17,7 @@ module.exports = {
 	EventLogSizeBytes: 0,
 	LogFileName: '',
 	EventLogFileName: '',
+	ViewLastLogSize: 0,
 	
 	/**
 	 * Initializes settings from AppData object sections.
@@ -25,10 +26,15 @@ module.exports = {
 	 */
 	init: function (oAppData)
 	{
-		var oAppDataSection = oAppData['Core'];
+		var 
+			oAppDataSection = oAppData['Core'],
+			oAppDataSectionLogsViewerWebclient = oAppData[this.ServerModuleName]
+		;
 		
 		if (!_.isEmpty(oAppDataSection))
 		{
+			this.ViewLastLogSize = oAppDataSectionLogsViewerWebclient['ViewLastLogSize'];
+			
 			this.ELogLevel = Types.pObject(oAppDataSection.ELogLevel);
 			
 			this.EnableLogging = Types.pBool(oAppDataSection.EnableLogging);

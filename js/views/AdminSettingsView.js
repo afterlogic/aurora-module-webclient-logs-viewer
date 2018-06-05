@@ -25,7 +25,7 @@ function CLoggingAdminSettingsView()
 {
 	CAbstractSettingsFormView.call(this, 'Core');
 	
-	this.iViewLogSizeBytes = 10240;
+	this.iViewLogSizeBytes = Settings.ViewLastLogSize;
 	this.aLevelOptions = [
 		{text: TextUtils.i18n('%MODULENAME%/LABEL_LOGGING_DEBUG'), value: Enums.LogLevel.Full},
 		{text: TextUtils.i18n('%MODULENAME%/LABEL_LOGGING_WARNINGS'), value: Enums.LogLevel.Warning},

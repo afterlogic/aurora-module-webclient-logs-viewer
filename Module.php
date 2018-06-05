@@ -16,6 +16,15 @@ namespace Aurora\Modules\LogsViewerWebclient;
  */
 class Module extends \Aurora\System\Module\AbstractWebclientModule
 {
+	public function GetSettings()
+	{
+		\Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::TenantAdmin);
+		
+		return array(
+			'ViewLastLogSize' => $this->getConfig('ViewLastLogSize', 1024000)
+		);
+	}	
+	
 	public function GetUsersWithSeparateLog()
 	{
 		\Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::TenantAdmin);
