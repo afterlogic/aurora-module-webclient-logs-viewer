@@ -46,8 +46,9 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 		return \Aurora\Modules\Core\Module::Decorator()->GetLogFile($EventsLog, $PublicId);
 	}
 	
-	public function GetLog($EventsLog, $PartSize = 10240)
+	public function GetLog($EventsLog)
 	{
+		$PartSize = $this->getConfig('ViewLastLogSize', 1024000);
 		\Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::TenantAdmin);
 		return \Aurora\Modules\Core\Module::Decorator()->GetLog($EventsLog, $PartSize);
 	}

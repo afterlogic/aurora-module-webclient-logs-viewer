@@ -18,5 +18,9 @@
 	"Url": [
 		"",
 		"string"
+	],
+	"ViewLastLogSize": [
+		1024000,
+		"int"
 	]
 }
