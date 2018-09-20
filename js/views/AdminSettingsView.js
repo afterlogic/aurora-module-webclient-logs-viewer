@@ -10,6 +10,7 @@ var
 	Types = require('%PathToCoreWebclientModule%/js/utils/Types.js'),
 	
 	Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js'),
+	Api = require('%PathToCoreWebclientModule%/js/Api.js'),
 	WindowOpener = require('%PathToCoreWebclientModule%/js/WindowOpener.js'),
 	
 	Settings = require('modules/%ModuleName%/js/Settings.js'),
@@ -78,9 +79,13 @@ CLoggingAdminSettingsView.prototype.onRouteChild = function ()
 {
 	this.setUpdateStatusTimer();
 	Ajax.send(Settings.ServerModuleName, 'GetUsersWithSeparateLog', null, function (oResponse) {
-		if (oResponse.Result && _.isArray(oResponse.Result))
+		if (oResponse.Result)
 		{
-			this.usersWithSeparateLog(oResponse.Result);
+			this.usersWithSeparateLog(_.isArray(oResponse.Result) ? oResponse.Result : []);
+		}
+		else
+		{
+			Api.showErrorByCode(oResponse);
 		}
 	}, this);
 };
