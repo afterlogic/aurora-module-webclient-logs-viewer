@@ -12,6 +12,7 @@ var
 	Ajax = require('%PathToCoreWebclientModule%/js/Ajax.js'),
 	Api = require('%PathToCoreWebclientModule%/js/Api.js'),
 	WindowOpener = require('%PathToCoreWebclientModule%/js/WindowOpener.js'),
+	UserSettings = require('%PathToCoreWebclientModule%/js/Settings.js'),
 	
 	Settings = require('modules/%ModuleName%/js/Settings.js'),
 	
@@ -78,16 +79,20 @@ CLoggingAdminSettingsView.prototype.ViewTemplate = '%ModuleName%_AdminSettingsVi
 CLoggingAdminSettingsView.prototype.onRouteChild = function ()
 {
 	this.setUpdateStatusTimer();
-	Ajax.send(Settings.ServerModuleName, 'GetUsersWithSeparateLog', null, function (oResponse) {
-		if (oResponse.Result)
-		{
-			this.usersWithSeparateLog(_.isArray(oResponse.Result) ? oResponse.Result : []);
-		}
-		else
-		{
-			Api.showErrorByCode(oResponse);
-		}
-	}, this);
+	var bDbNotConfigured = (UserSettings.DbLogin === '' || UserSettings.DbName === '' || UserSettings.DbHost === '');
+	if (!bDbNotConfigured)
+	{
+		Ajax.send(Settings.ServerModuleName, 'GetUsersWithSeparateLog', null, function (oResponse) {
+			if (oResponse.Result)
+			{
+				this.usersWithSeparateLog(_.isArray(oResponse.Result) ? oResponse.Result : []);
+			}
+			else
+			{
+				Api.showErrorByCode(oResponse);
+			}
+		}, this);
+	}
 };
 
 CLoggingAdminSettingsView.prototype.turnOffSeparateLogs = function ()
