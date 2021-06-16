@@ -103,11 +103,11 @@
 </template>
 
 <script>
-import textUtil from '../../../AdminPanelWebclient/vue/src/utils/text'
-import webApi from '../../../AdminPanelWebclient/vue/src/utils/web-api'
-import settings from '../../../AdminPanelWebclient/vue/src/settings'
-import notification from '../../../AdminPanelWebclient/vue/src/utils/notification'
-import errors from '../../../AdminPanelWebclient/vue/src/utils/errors'
+import textUtil from 'src/utils/text'
+import webApi from 'src/utils/web-api'
+import settings from 'src/settings'
+import notification from 'src/utils/notification'
+import errors from 'src/utils/errors'
 import UnsavedChangesDialog from 'src/components/UnsavedChangesDialog'
 import _ from 'lodash';
 
@@ -166,6 +166,7 @@ export default {
       })
     },
     save () {
+      this.saving = true
       const parameters = {
         EnableLogging: this.enableLogging,
         EnableEventLogging: this.enableEventLogging,
@@ -176,13 +177,20 @@ export default {
         methodName: 'UpdateSettings',
         parameters: parameters,
       }).then(result => {
+        this.saving = false
         if (result) {
           settings.saveLoggingData({
             enableLogging: this.enableLogging,
             enableEventLogging: this.enableEventLogging,
             loggingLevel: this.verbosity.value
           })
+          notification.showReport(this.$t('COREWEBCLIENT.REPORT_SETTINGS_UPDATE_SUCCESS'))
+        } else {
+          notification.showError(this.$t('COREWEBCLIENT.ERROR_SAVING_SETTINGS_FAILED'))
         }
+      }, response => {
+        this.saving = false
+        notification.showError(errors.getTextFromResponse(response, this.$t('COREWEBCLIENT.ERROR_SAVING_SETTINGS_FAILED')))
       })
     },
     getLogFilesData () {
