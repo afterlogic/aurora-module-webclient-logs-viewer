@@ -4,27 +4,28 @@
       <q-card flat bordered class="card-edit-settings">
         <q-card-section>
           <div class="row">
-              <q-item>
-                <q-item-section>
-                  <q-checkbox v-model="enableLogging" color="teal">
-                    <q-item-label caption>{{$t('LOGSVIEWERWEBCLIENT.LABEL_LOGGING_ENABLE')}}</q-item-label>
-                  </q-checkbox>
-                </q-item-section>
-              </q-item>
+            <q-item>
+              <q-item-section>
+                <q-checkbox v-model="enableLogging" color="teal">
+                  <q-item-label caption>{{ $t('LOGSVIEWERWEBCLIENT.LABEL_LOGGING_ENABLE') }}</q-item-label>
+                </q-checkbox>
+              </q-item-section>
+            </q-item>
           </div>
           <div class="row q-mb-md q-ml-md">
             <div class="col-1 q-my-sm q-ml-sm" v-t="'LOGSVIEWERWEBCLIENT.LABEL_LOGGING_VERBOSITY'"></div>
             <div class="col-5 q-ml-xl">
-              <q-select  flat
-                         outlined
-                         dense class="bg-white" v-model="verbosity"
-                        :options="verbosityList" />
+              <q-select flat
+                        outlined
+                        dense class="bg-white" v-model="verbosity"
+                        :options="verbosityList"/>
             </div>
           </div>
           <div class="row q-mb-md q-ml-md">
             <div class="q-ml-sm">
               <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary"
-                     :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_DOWNLOAD', {'SIZE': logSizeBytes})" @click="getLogFile(logFileName, false)">
+                     :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_DOWNLOAD', {'SIZE': logSizeBytes})"
+                     @click="getLogFile(logFileName, false)">
               </q-btn>
             </div>
             <div class="q-ml-md">
@@ -42,7 +43,7 @@
             <q-item>
               <q-item-section>
                 <q-checkbox v-model="enableEventLogging" color="teal">
-                  <q-item-label caption>{{$t('LOGSVIEWERWEBCLIENT.LABEL_LOGGING_ENABLE_EVENTS')}}</q-item-label>
+                  <q-item-label caption>{{ $t('LOGSVIEWERWEBCLIENT.LABEL_LOGGING_ENABLE_EVENTS') }}</q-item-label>
                 </q-checkbox>
               </q-item-section>
             </q-item>
@@ -50,7 +51,8 @@
           <div class="row q-mb-md q-ml-md">
             <div class="q-ml-sm">
               <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary"
-                     :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_DOWNLOAD_EVENTS', {'SIZE': eventLogSizeBytes})" @click="getLogFile(eventLogFileName, true)">
+                     :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_DOWNLOAD_EVENTS', {'SIZE': eventLogSizeBytes})"
+                     @click="getLogFile(eventLogFileName, true)">
               </q-btn>
             </div>
             <div class="q-ml-md">
@@ -66,18 +68,20 @@
             </div>
           </div>
           <div class="row q-mb-md q-ml-md" v-if="users.length">
-          <div class="col-10">
-            <div class="q-px-md">{{ $t('LOGSVIEWERWEBCLIENT.LABEL_LOGGING_USERS_WITH_SEPARATE_LOG') }}
-              <span class="logging-user__link" v-for="(user, index) in users" @click="getLogFile(logFileName, false, user)">
-              {{ user }}{{ index !== users.length - 1 ? ',' : ''}}
+            <div class="col-10">
+              <div class="q-px-md">{{ $t('LOGSVIEWERWEBCLIENT.LABEL_LOGGING_USERS_WITH_SEPARATE_LOG') }}
+                <span class="logging-user__link" v-for="(user, index) in users"
+                      :key="user" @click="getLogFile(logFileName, false, user)">
+              {{ user }}{{ index !== users.length - 1 ? ',' : '' }}
             </span>
+              </div>
             </div>
-          </div>
           </div>
           <div class="row q-mb-md q-ml-md" v-if="users.length">
             <div class="q-ml-sm">
               <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary"
-                     :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_TURN_OFF_SEPARATE_LOGS')" @click="turnOffSeparateLogs">
+                     :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_TURN_OFF_SEPARATE_LOGS')"
+                     @click="turnOffSeparateLogs">
               </q-btn>
             </div>
             <div class="q-ml-md">
@@ -94,52 +98,48 @@
         </q-btn>
       </div>
     </div>
-    <UnsavedChangesDialog ref="unsavedChangesDialog" />
+    <UnsavedChangesDialog ref="unsavedChangesDialog"/>
   </q-scroll-area>
 </template>
 
 <script>
 import textUtil from '../../../AdminPanelWebclient/vue/src/utils/text'
-import webApi from "../../../AdminPanelWebclient/vue/src/utils/web-api";
-import settings from "../../../AdminPanelWebclient/vue/src/settings";
-import notification from "../../../AdminPanelWebclient/vue/src/utils/notification";
-import errors from "../../../AdminPanelWebclient/vue/src/utils/errors";
+import webApi from '../../../AdminPanelWebclient/vue/src/utils/web-api'
+import settings from '../../../AdminPanelWebclient/vue/src/settings'
+import notification from '../../../AdminPanelWebclient/vue/src/utils/notification'
+import errors from '../../../AdminPanelWebclient/vue/src/utils/errors'
 import UnsavedChangesDialog from 'src/components/UnsavedChangesDialog'
-import _ from "lodash";
+import _ from 'lodash';
 
 export default {
-  name: "LoggingAdminSettings",
+  name: 'LoggingAdminSettings',
   components: {
     UnsavedChangesDialog
   },
-  data() {
+  data () {
     return {
-      verbosity: {value: 100, label: 'Debug'},
+      verbosity: '',
       verbosityList: [
-        {value: 100, label: 'Debug'},
-        {value: 50, label: 'Warnings'},
-        {value: 20, label: 'Errors'},
+        { value: 100, label: 'Debug' },
+        { value: 50, label: 'Warnings' },
+        { value: 20, label: 'Errors' },
       ],
       logFileData: {},
-      
       logSizeBytes: 0,
       eventLogSizeBytes: 0,
       logFileName: '',
       eventLogFileName: '',
-  
       enableLogging: false,
       enableEventLogging: false,
       loggingLevel: 100,
       users: [],
-      
       saving: false
     }
   },
-  mounted() {
+  mounted () {
     this.populate()
     this.getLogFilesData()
     this.GetUsersWithSeparateLog()
-    //this.turnOffSeparateLogs()
   },
   beforeRouteLeave (to, from, next) {
     if (this.hasChanges() && _.isFunction(this?.$refs?.unsavedChangesDialog?.openConfirmDiscardChangesDialog)) {
@@ -165,7 +165,7 @@ export default {
         }
       })
     },
-    save() {
+    save () {
       const parameters = {
         EnableLogging: this.enableLogging,
         EnableEventLogging: this.enableEventLogging,
@@ -182,14 +182,10 @@ export default {
             enableEventLogging: this.enableEventLogging,
             loggingLevel: this.verbosity.value
           })
-        } else {
-      
         }
-      }, response => {
-    
       })
     },
-    getLogFilesData() {
+    getLogFilesData () {
       webApi.sendRequest({
         moduleName: 'LogsViewerWebclient',
         methodName: 'GetLogFilesData',
@@ -203,10 +199,10 @@ export default {
         this.setUpdateStatusTimer()
       })
     },
-    setUpdateStatusTimer() {
+    setUpdateStatusTimer () {
       setTimeout(this.getLogFilesData, 5000)
     },
-    GetUsersWithSeparateLog() {
+    GetUsersWithSeparateLog () {
       const parameters = {}
       webApi.sendRequest({
         moduleName: 'LogsViewerWebclient',
@@ -214,11 +210,11 @@ export default {
         parameters: parameters,
       }).then(result => {
         if (result) {
-        this.users = result
+          this.users = result
         }
       })
     },
-    getLog(eventsLog) {
+    getLog (eventsLog) {
       const parameters = {
         EventsLog: eventsLog,
         PublicId: ''
@@ -234,7 +230,7 @@ export default {
         }
       })
     },
-    getLogFile(fileName, eventsLog, PublicId = '') {
+    getLogFile (fileName, eventsLog, PublicId = '') {
       const parameters = {
         EventsLog: eventsLog,
         PublicId: PublicId
@@ -250,7 +246,7 @@ export default {
         format: 'Raw'
       })
     },
-    clearLog() {
+    clearLog () {
       webApi.sendRequest({
         moduleName: 'LogsViewerWebclient',
         methodName: 'ClearLog',
@@ -264,7 +260,7 @@ export default {
         notification.showError(errors.getTextFromResponse(response, this.$t('COREWEBCLIENT.ERROR_SAVING_SETTINGS_FAILED')))
       })
     },
-    turnOffSeparateLogs() {
+    turnOffSeparateLogs () {
       webApi.sendRequest({
         moduleName: 'LogsViewerWebclient',
         methodName: 'TurnOffSeparateLogs',
@@ -274,7 +270,7 @@ export default {
         }
       })
     },
-    clearSeparateLogs() {
+    clearSeparateLogs () {
       webApi.sendRequest({
         moduleName: 'LogsViewerWebclient',
         methodName: 'ClearSeparateLogs',
@@ -288,9 +284,6 @@ export default {
         notification.showError(errors.getTextFromResponse(response, this.$t('COREWEBCLIENT.ERROR_SAVING_SETTINGS_FAILED')))
       })
     },
-    viewLog() {
-    
-    }
   }
 }
 </script>
@@ -300,6 +293,7 @@ export default {
   color: #1c868e;
   cursor: pointer;
 }
+
 .logging-user__link:hover {
   text-decoration: underline;
 }
