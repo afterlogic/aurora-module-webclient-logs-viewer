@@ -7,13 +7,13 @@
             <q-item>
               <q-item-section>
                 <q-checkbox v-model="enableLogging" color="teal">
-                  <q-item-label caption>{{ $t('LOGSVIEWERWEBCLIENT.LABEL_LOGGING_ENABLE') }}</q-item-label>
+                  <q-item-label caption v-t="'LOGSVIEWERWEBCLIENT.LABEL_LOGGING_ENABLE'" />
                 </q-checkbox>
               </q-item-section>
             </q-item>
           </div>
           <div class="row q-mb-md q-ml-md">
-            <div class="col-1 q-my-sm q-ml-sm" v-t="'LOGSVIEWERWEBCLIENT.LABEL_LOGGING_VERBOSITY'"></div>
+            <div class="col-1 q-my-sm q-ml-sm" v-t="'LOGSVIEWERWEBCLIENT.LABEL_LOGGING_VERBOSITY'" />
             <div class="col-5 q-ml-xl">
               <q-select flat
                         outlined
@@ -24,26 +24,23 @@
           <div class="row q-mb-md q-ml-md">
             <div class="q-ml-sm">
               <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary"
-                     :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_DOWNLOAD', {'SIZE': logSizeBytes})"
-                     @click="getLogFile(logFileName, false)">
-              </q-btn>
+                     :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_DOWNLOAD', {'SIZE': viewLogSizeBytes})"
+                     @click="getLogFile(logFileName, false)" />
             </div>
             <div class="q-ml-md">
               <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary"
-                     :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_VIEW')" @click="getLog(false)">
-              </q-btn>
+                     :label="viewLogText" @click="getLog(false)" />
             </div>
             <div class="q-ml-md">
-              <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary"
-                     :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR')" @click="clearLog">
-              </q-btn>
+              <q-btn unelevated no-caps dense class="q-px-sm q-py-xs" :ripple="false" color="primary"
+                    v-t="'LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR'" @click="clearLog" />
             </div>
           </div>
           <div class="row">
             <q-item>
               <q-item-section>
                 <q-checkbox v-model="enableEventLogging" color="teal">
-                  <q-item-label caption>{{ $t('LOGSVIEWERWEBCLIENT.LABEL_LOGGING_ENABLE_EVENTS') }}</q-item-label>
+                  <q-item-label caption v-t="'LOGSVIEWERWEBCLIENT.LABEL_LOGGING_ENABLE_EVENTS'" />
                 </q-checkbox>
               </q-item-section>
             </q-item>
@@ -51,51 +48,46 @@
           <div class="row q-mb-md q-ml-md">
             <div class="q-ml-sm">
               <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary"
-                     :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_DOWNLOAD_EVENTS', {'SIZE': eventLogSizeBytes})"
-                     @click="getLogFile(eventLogFileName, true)">
-              </q-btn>
+                     :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_DOWNLOAD_EVENTS', {'SIZE': viewEventLogSizeBytes})"
+                     @click="getLogFile(eventLogFileName, true)" />
             </div>
             <div class="q-ml-md">
               <q-btn unelevated no-caps dense class="q-px-sm"
                      :ripple="false" color="primary"
-                     :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_VIEW')" @click="getLog(true)">
-              </q-btn>
+                     :label="viewEventsLogText" @click="getLog(true)" />
             </div>
             <div class="q-ml-md">
-              <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary"
-                     :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR')">
-              </q-btn>
+              <q-btn unelevated no-caps dense class="q-px-sm q-py-xs" :ripple="false" color="primary"
+                     v-t="'LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR'" />
             </div>
           </div>
           <div class="row q-mb-md q-ml-md" v-if="users.length">
             <div class="col-10">
-              <div class="q-px-md">{{ $t('LOGSVIEWERWEBCLIENT.LABEL_LOGGING_USERS_WITH_SEPARATE_LOG') }}
+              <div class="q-px-md">
+                {{$t('LOGSVIEWERWEBCLIENT.LABEL_LOGGING_USERS_WITH_SEPARATE_LOG')}}
                 <span class="logging-user__link" v-for="(user, index) in users"
                       :key="user" @click="getLogFile(logFileName, false, user)">
-              {{ user }}{{ index !== users.length - 1 ? ',' : '' }}
-            </span>
+                      {{ user }}{{ index !== users.length - 1 ? ',' : '' }}
+                </span>
               </div>
             </div>
           </div>
           <div class="row q-mb-md q-ml-md" v-if="users.length">
             <div class="q-ml-sm">
-              <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary"
-                     :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_TURN_OFF_SEPARATE_LOGS')"
-                     @click="turnOffSeparateLogs">
-              </q-btn>
+              <q-btn unelevated no-caps dense class="q-px-sm q-py-xs" :ripple="false" color="primary"
+                    v-t="'LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_TURN_OFF_SEPARATE_LOGS'"
+                     @click="turnOffSeparateLogs" />
             </div>
             <div class="q-ml-md">
-              <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary"
-                     :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR_SEPARATE_LOGS')" @click="clearSeparateLogs">
-              </q-btn>
+              <q-btn unelevated no-caps dense class="q-px-sm q-py-xs" :ripple="false" color="primary"
+                     v-t="'LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR_SEPARATE_LOGS'" @click="clearSeparateLogs" />
             </div>
           </div>
         </q-card-section>
       </q-card>
       <div class="q-pt-md text-right">
         <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary" @click="save"
-               :label="saving ? $t('COREWEBCLIENT.ACTION_SAVE_IN_PROGRESS') : $t('COREWEBCLIENT.ACTION_SAVE')">
-        </q-btn>
+               :label="saving ? $t('COREWEBCLIENT.ACTION_SAVE_IN_PROGRESS') : $t('COREWEBCLIENT.ACTION_SAVE')" />
       </div>
     </div>
     <UnsavedChangesDialog ref="unsavedChangesDialog"/>
@@ -119,27 +111,26 @@ export default {
   data () {
     return {
       verbosity: '',
-      verbosityList: [
-        { value: 100, label: 'Debug' },
-        { value: 50, label: 'Warnings' },
-        { value: 20, label: 'Errors' },
-      ],
       logFileData: {},
       logSizeBytes: 0,
       eventLogSizeBytes: 0,
+      viewLastLogSize: 0,
+      viewLogSizeBytes: 0,
+      viewEventLogSizeBytes: 0,
       logFileName: '',
       eventLogFileName: '',
       enableLogging: false,
       enableEventLogging: false,
       loggingLevel: 100,
       users: [],
+      timeOut: false,
       saving: false
     }
   },
   mounted () {
     this.populate()
     this.getLogFilesData()
-    this.GetUsersWithSeparateLog()
+    this.getUsersWithSeparateLog()
   },
   beforeRouteLeave (to, from, next) {
     if (this.hasChanges() && _.isFunction(this?.$refs?.unsavedChangesDialog?.openConfirmDiscardChangesDialog)) {
@@ -148,19 +139,46 @@ export default {
       next()
     }
   },
+  computed: {
+    verbosityList () {
+      return [
+        { value: 100, label: this.$t('LOGSVIEWERWEBCLIENT.LABEL_LOGGING_DEBUG') },
+        { value: 50, label: this.$t('LOGSVIEWERWEBCLIENT.LABEL_LOGGING_WARNINGS') },
+        { value: 20, label: this.$t('LOGSVIEWERWEBCLIENT.LABEL_LOGGING_ERRORS') },
+      ]
+    },
+    viewLogText () {
+      if (this.logSizeBytes < this.viewLastLogSize) {
+        return this.$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_VIEW')
+      } else {
+        return this.$tc('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_VIEW_LAST', textUtil.getFriendlySize(this.viewLastLogSize), { SIZE: textUtil.getFriendlySize(this.viewLastLogSize) })
+      }
+    },
+    viewEventsLogText () {
+      if (this.eventLogSizeBytes < this.viewLastLogSize) {
+        return this.$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_VIEW');
+      } else {
+        return this.$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_VIEW_LAST', textUtil.getFriendlySize(this.viewLastLogSize), { SIZE: textUtil.getFriendlySize(this.viewLastLogSize) });
+      }
+    }
+  },
+  beforeDestroy() {
+    clearTimeout(this.timeOut);
+  },
   methods: {
     hasChanges () {
       const data = settings.getLoggingData()
-      return this.enableLogging !== data.EnableLogging ||
-          this.enableEventLogging !== data.EnableEventLogging ||
-          this.verbosity.value !== data.LoggingLevel
+      return this.enableLogging !== data.enableLogging ||
+          this.enableEventLogging !== data.enableEventLogging ||
+          this.verbosity.value !== data.loggingLevel
     },
     populate () {
       const data = settings.getLoggingData()
-      this.enableLogging = data.EnableLogging
-      this.enableEventLogging = data.EnableEventLogging
+      this.enableLogging = data.enableLogging
+      this.enableEventLogging = data.enableEventLogging
+      this.viewLastLogSize = data.viewLastLogSize
       this.verbosityList.forEach((elem) => {
-        if (elem.value === data.LoggingLevel) {
+        if (elem.value === data.loggingLevel) {
           this.verbosity = elem
         }
       })
@@ -199,8 +217,10 @@ export default {
         methodName: 'GetLogFilesData',
       }).then(result => {
         if (result) {
-          this.logSizeBytes = textUtil.getFriendlySize(result.LogSizeBytes)
-          this.eventLogSizeBytes = textUtil.getFriendlySize(result.EventLogSizeBytes)
+          this.logSizeBytes = result.LogSizeBytes
+          this.eventLogSizeBytes = result.EventLogSizeBytes
+          this.viewLogSizeBytes = textUtil.getFriendlySize(result.LogSizeBytes)
+          this.viewEventLogSizeBytes = textUtil.getFriendlySize(result.EventLogSizeBytes)
           this.logFileName = result.LogFileName
           this.eventLogFileName = result.EventLogFileName
         }
@@ -208,9 +228,9 @@ export default {
       })
     },
     setUpdateStatusTimer () {
-      setTimeout(this.getLogFilesData, 5000)
+      this.timeOut = setTimeout(this.getLogFilesData, 5000)
     },
-    GetUsersWithSeparateLog () {
+    getUsersWithSeparateLog () {
       const parameters = {}
       webApi.sendRequest({
         moduleName: 'LogsViewerWebclient',
@@ -224,8 +244,7 @@ export default {
     },
     getLog (eventsLog) {
       const parameters = {
-        EventsLog: eventsLog,
-        PublicId: ''
+        EventsLog: eventsLog
       }
       webApi.sendRequest({
         moduleName: 'LogsViewerWebclient',
@@ -274,7 +293,7 @@ export default {
         methodName: 'TurnOffSeparateLogs',
       }).then(result => {
         if (result === true) {
-          this.GetUsersWithSeparateLog()
+          this.getUsersWithSeparateLog()
         }
       })
     },
