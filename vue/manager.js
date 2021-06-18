@@ -1,8 +1,12 @@
 export default {
+  moduleName: 'LogsViewerWebclient',
+
+  requiredModules: [],
+
   getAdminSystemTabs () {
     return [
       {
-        name: 'logs-viewer',
+        tabName: 'logs-viewer',
         title: 'LOGSVIEWERWEBCLIENT.LABEL_LOGGING_SETTINGS_TAB',
         component () {
           return import('src/../../../LogsViewerWebclient/vue/components/LoggingAdminSettings')
