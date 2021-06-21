@@ -240,6 +240,8 @@ export default {
         if (result) {
           this.users = result
         }
+      }, response => {
+        notification.showError(errors.getTextFromResponse(response))
       })
     },
     getLog (eventsLog) {
@@ -255,6 +257,8 @@ export default {
           const oWin = window.open('view-log', '', 'scrollbars=1')
           oWin.document.write('<pre>' + result + '</pre>')
         }
+      }, response => {
+        notification.showError(errors.getTextFromResponse(response))
       })
     },
     getLogFile (fileName, eventsLog, PublicId = '') {
