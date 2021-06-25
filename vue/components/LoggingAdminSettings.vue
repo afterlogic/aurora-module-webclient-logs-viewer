@@ -126,7 +126,9 @@ export default {
       timeOut: false,
       saving: false,
       downloadingLogs: false,
-      cleaningLogs: false
+      cleaningLogs: false,
+      viewLogs: false,
+      turningOffSeparateLogs: false
     }
   },
   mounted () {
@@ -186,32 +188,34 @@ export default {
       })
     },
     save () {
-      this.saving = true
-      const parameters = {
-        EnableLogging: this.enableLogging,
-        EnableEventLogging: this.enableEventLogging,
-        LoggingLevel: this.verbosity.value
-      }
-      webApi.sendRequest({
-        moduleName: 'Core',
-        methodName: 'UpdateSettings',
-        parameters: parameters,
-      }).then(result => {
-        this.saving = false
-        if (result) {
-          settings.saveLoggingData({
-            enableLogging: this.enableLogging,
-            enableEventLogging: this.enableEventLogging,
-            loggingLevel: this.verbosity.value
-          })
-          notification.showReport(this.$t('COREWEBCLIENT.REPORT_SETTINGS_UPDATE_SUCCESS'))
-        } else {
-          notification.showError(this.$t('COREWEBCLIENT.ERROR_SAVING_SETTINGS_FAILED'))
+      if (!this.saving) {
+        this.saving = true
+        const parameters = {
+          EnableLogging: this.enableLogging,
+          EnableEventLogging: this.enableEventLogging,
+          LoggingLevel: this.verbosity.value
         }
-      }, response => {
-        this.saving = false
-        notification.showError(errors.getTextFromResponse(response, this.$t('COREWEBCLIENT.ERROR_SAVING_SETTINGS_FAILED')))
-      })
+        webApi.sendRequest({
+          moduleName: 'Core',
+          methodName: 'UpdateSettings',
+          parameters: parameters,
+        }).then(result => {
+          this.saving = false
+          if (result) {
+            settings.saveLoggingData({
+              enableLogging: this.enableLogging,
+              enableEventLogging: this.enableEventLogging,
+              loggingLevel: this.verbosity.value
+            })
+            notification.showReport(this.$t('COREWEBCLIENT.REPORT_SETTINGS_UPDATE_SUCCESS'))
+          } else {
+            notification.showError(this.$t('COREWEBCLIENT.ERROR_SAVING_SETTINGS_FAILED'))
+          }
+        }, response => {
+          this.saving = false
+          notification.showError(errors.getTextFromResponse(response, this.$t('COREWEBCLIENT.ERROR_SAVING_SETTINGS_FAILED')))
+        })
+      }
     },
     getLogFilesData () {
       webApi.sendRequest({
@@ -247,21 +251,26 @@ export default {
       })
     },
     getLog (eventsLog) {
-      const parameters = {
-        EventsLog: eventsLog
-      }
-      webApi.sendRequest({
-        moduleName: 'LogsViewerWebclient',
-        methodName: 'GetLog',
-        parameters: parameters,
-      }).then(result => {
-        if (result) {
-          const oWin = window.open('view-log', '', 'scrollbars=1')
-          oWin.document.write('<pre>' + result + '</pre>')
+      if (!this.viewLogs) {
+        this.viewLogs = true
+        const parameters = {
+          EventsLog: eventsLog
         }
-      }, response => {
-        notification.showError(errors.getTextFromResponse(response))
-      })
+        webApi.sendRequest({
+          moduleName: 'LogsViewerWebclient',
+          methodName: 'GetLog',
+          parameters: parameters,
+        }).then(result => {
+          this.viewLogs = false
+          if (result) {
+            const oWin = window.open('view-log', '', 'scrollbars=1')
+            oWin.document.write('<pre>' + result + '</pre>')
+          }
+        }, response => {
+          this.viewLogs = false
+          notification.showError(errors.getTextFromResponse(response))
+        })
+      }
     },
     getLogFile (fileName, eventsLog, PublicId = '') {
       if (!this.downloadingLogs) {
@@ -304,28 +313,39 @@ export default {
       }
     },
     turnOffSeparateLogs () {
-      webApi.sendRequest({
-        moduleName: 'LogsViewerWebclient',
-        methodName: 'TurnOffSeparateLogs',
-      }).then(result => {
-        if (result === true) {
-          this.getUsersWithSeparateLog()
-        }
-      })
+      if (!this.turningOffSeparateLogs) {
+        this.turningOffSeparateLogs = true
+        webApi.sendRequest({
+          moduleName: 'LogsViewerWebclient',
+          methodName: 'TurnOffSeparateLogs',
+        }).then(result => {
+          if (result === true) {
+            this.getUsersWithSeparateLog()
+          }
+          this.turningOffSeparateLogs = false
+        }, () => {
+          this.turningOffSeparateLogs = false
+        })
+      }
     },
     clearSeparateLogs () {
-      webApi.sendRequest({
-        moduleName: 'LogsViewerWebclient',
-        methodName: 'ClearSeparateLogs',
-      }).then(result => {
-        if (result === true) {
-          notification.showReport(this.$t('COREWEBCLIENT.REPORT_SETTINGS_UPDATE_SUCCESS'))
-        } else {
-          notification.showError(this.$t('COREWEBCLIENT.ERROR_SAVING_SETTINGS_FAILED'))
-        }
-      }, response => {
-        notification.showError(errors.getTextFromResponse(response, this.$t('COREWEBCLIENT.ERROR_SAVING_SETTINGS_FAILED')))
-      })
+      if (!this.cleaningLogs) {
+        this.cleaningLogs = true
+        webApi.sendRequest({
+          moduleName: 'LogsViewerWebclient',
+          methodName: 'ClearSeparateLogs',
+        }).then(result => {
+          this.cleaningLogs = false
+          if (result === true) {
+            notification.showReport(this.$t('COREWEBCLIENT.REPORT_SETTINGS_UPDATE_SUCCESS'))
+          } else {
+            notification.showError(this.$t('COREWEBCLIENT.ERROR_SAVING_SETTINGS_FAILED'))
+          }
+        }, response => {
+          this.cleaningLogs = false
+          notification.showError(errors.getTextFromResponse(response, this.$t('COREWEBCLIENT.ERROR_SAVING_SETTINGS_FAILED')))
+        })
+      }
     },
   }
 }
