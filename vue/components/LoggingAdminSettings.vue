@@ -33,7 +33,7 @@
             </div>
             <div class="q-ml-md">
               <q-btn unelevated no-caps dense class="q-px-sm q-py-xs" :ripple="false" color="primary"
-                    v-t="'LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR'" @click="clearLog" />
+                    v-t="'LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR'" @click="clearLog(false)" />
             </div>
           </div>
           <div class="row">
@@ -58,7 +58,7 @@
             </div>
             <div class="q-ml-md">
               <q-btn unelevated no-caps dense class="q-px-sm q-py-xs" :ripple="false" color="primary"
-                     v-t="'LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR'" />
+                     v-t="'LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR'" @click="clearLog(true)" />
             </div>
           </div>
           <div class="row q-mb-md q-ml-md" v-if="users.length">
@@ -124,7 +124,9 @@ export default {
       loggingLevel: 100,
       users: [],
       timeOut: false,
-      saving: false
+      saving: false,
+      downloadingLogs: false,
+      cleaningLogs: false
     }
   },
   mounted () {
@@ -262,34 +264,44 @@ export default {
       })
     },
     getLogFile (fileName, eventsLog, PublicId = '') {
-      const parameters = {
-        EventsLog: eventsLog,
-        PublicId: PublicId
-      }
-      if (PublicId) {
-        fileName = PublicId + '-' + fileName
-      }
-      webApi.downloadExportFile({
-        moduleName: 'LogsViewerWebclient',
-        methodName: 'GetLogFile',
-        parameters: parameters,
-        fileName: fileName,
-        format: 'Raw'
-      })
-    },
-    clearLog () {
-      webApi.sendRequest({
-        moduleName: 'LogsViewerWebclient',
-        methodName: 'ClearLog',
-      }).then(result => {
-        if (result === true) {
-          notification.showReport(this.$t('COREWEBCLIENT.REPORT_SETTINGS_UPDATE_SUCCESS'))
-        } else {
-          notification.showError(this.$t('COREWEBCLIENT.ERROR_SAVING_SETTINGS_FAILED'))
+      if (!this.downloadingLogs) {
+        this.downloadingLogs = true
+        const parameters = {
+          EventsLog: eventsLog,
+          PublicId: PublicId
         }
-      }, response => {
-        notification.showError(errors.getTextFromResponse(response, this.$t('COREWEBCLIENT.ERROR_SAVING_SETTINGS_FAILED')))
-      })
+        if (PublicId) {
+          fileName = PublicId + '-' + fileName
+        }
+        webApi.downloadExportFile({
+          moduleName: 'LogsViewerWebclient',
+          methodName: 'GetLogFile',
+          parameters: parameters,
+          fileName: fileName,
+          format: 'Raw'
+        }).then(() => {
+          this.downloadingLogs = false
+        })
+      }
+    },
+    clearLog (isEventsLog) {
+      if (!this.cleaningLogs) {
+        this.cleaningLogs = true
+        const parameters = {}
+        if (isEventsLog) {
+          parameters.EventsLog = true
+        }
+        webApi.sendRequest({
+          moduleName: 'LogsViewerWebclient',
+          methodName: 'ClearLog',
+          parameters
+        }).then(() => {
+          this.cleaningLogs = false
+        }, response => {
+          this.cleaningLogs = false
+          notification.showError(errors.getTextFromResponse(response))
+        })
+      }
     },
     turnOffSeparateLogs () {
       webApi.sendRequest({
