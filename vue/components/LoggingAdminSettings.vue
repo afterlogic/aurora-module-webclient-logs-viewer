@@ -57,10 +57,17 @@
             <div class="col-10">
               <div>
                 {{$t('LOGSVIEWERWEBCLIENT.LABEL_LOGGING_USERS_WITH_SEPARATE_LOG')}}
-                <span class="logging-user__link" v-for="(user, index) in users"
-                      :key="user" @click="getLogFile(logFileName, false, user)">
-                  {{ user }}{{ index !== users.length - 1 ? ',' : '' }}
-                </span>
+                <li class="q-ml-sm"
+                    v-for="(user, index) in users"
+                    style="list-style-type: none"
+                      :key="user">
+                  <span class="logging-user__link" @click="getLogFile(logFileName, false, user)">
+                    {{ user }}
+                    <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
+                          {{ $t('LOGSVIEWERWEBCLIENT.INFO_LOGGING_CLICK_TO_DOWNLOAD') }}
+                        </q-tooltip>
+                  </span>
+                </li>
               </div>
             </div>
           </div>
