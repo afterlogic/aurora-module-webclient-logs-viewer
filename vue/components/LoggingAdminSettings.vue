@@ -3,17 +3,13 @@
     <div class="q-pa-lg" style="min-width: 811px">
       <q-card flat bordered class="card-edit-settings">
         <q-card-section>
-          <div class="row">
-            <q-item>
-              <q-item-section>
-                <q-checkbox v-model="enableLogging" color="teal">
-                  <q-item-label caption v-t="'LOGSVIEWERWEBCLIENT.LABEL_LOGGING_ENABLE'" />
-                </q-checkbox>
-              </q-item-section>
-            </q-item>
+          <div class="row q-mb-md">
+            <q-checkbox dense v-model="enableLogging" color="teal">
+              <span v-t="'LOGSVIEWERWEBCLIENT.LABEL_LOGGING_ENABLE'"/>
+            </q-checkbox>
           </div>
-          <div class="row q-mb-md q-ml-md">
-            <div class="col-1 q-my-sm q-ml-sm" v-t="'LOGSVIEWERWEBCLIENT.LABEL_LOGGING_VERBOSITY'" />
+          <div class="row q-mb-md">
+            <div class="col-1 q-my-sm" v-t="'LOGSVIEWERWEBCLIENT.LABEL_LOGGING_VERBOSITY'" />
             <div class="col-5 q-ml-xl">
               <q-select flat
                         outlined
@@ -21,8 +17,8 @@
                         :options="verbosityList"/>
             </div>
           </div>
-          <div class="row q-mb-md q-ml-md">
-            <div class="q-ml-sm">
+          <div class="row q-mb-md">
+            <div>
               <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary"
                      :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_DOWNLOAD', {'SIZE': viewLogSizeBytes})"
                      @click="getLogFile(logFileName, false)" />
@@ -36,17 +32,13 @@
                     v-t="'LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR'" @click="clearLog(false)" />
             </div>
           </div>
-          <div class="row">
-            <q-item>
-              <q-item-section>
-                <q-checkbox v-model="enableEventLogging" color="teal">
-                  <q-item-label caption v-t="'LOGSVIEWERWEBCLIENT.LABEL_LOGGING_ENABLE_EVENTS'" />
-                </q-checkbox>
-              </q-item-section>
-            </q-item>
+          <div class="row q-mb-md">
+            <q-checkbox dense v-model="enableEventLogging" color="teal">
+              <q-item-label v-t="'LOGSVIEWERWEBCLIENT.LABEL_LOGGING_ENABLE_EVENTS'"/>
+            </q-checkbox>
           </div>
-          <div class="row q-mb-md q-ml-md">
-            <div class="q-ml-sm">
+          <div class="row q-mb-md">
+            <div>
               <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary"
                      :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_DOWNLOAD_EVENTS', {'SIZE': viewEventLogSizeBytes})"
                      @click="getLogFile(eventLogFileName, true)" />
@@ -61,19 +53,19 @@
                      v-t="'LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR'" @click="clearLog(true)" />
             </div>
           </div>
-          <div class="row q-mb-md q-ml-md" v-if="users.length">
+          <div class="row q-mb-md" v-if="users.length">
             <div class="col-10">
-              <div class="q-px-md">
+              <div>
                 {{$t('LOGSVIEWERWEBCLIENT.LABEL_LOGGING_USERS_WITH_SEPARATE_LOG')}}
                 <span class="logging-user__link" v-for="(user, index) in users"
                       :key="user" @click="getLogFile(logFileName, false, user)">
-                      {{ user }}{{ index !== users.length - 1 ? ',' : '' }}
+                  {{ user }}{{ index !== users.length - 1 ? ',' : '' }}
                 </span>
               </div>
             </div>
           </div>
-          <div class="row q-mb-md q-ml-md" v-if="users.length">
-            <div class="q-ml-sm">
+          <div class="row q-mb-md" v-if="users.length">
+            <div>
               <q-btn unelevated no-caps dense class="q-px-sm q-py-xs" :ripple="false" color="primary"
                     v-t="'LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_TURN_OFF_SEPARATE_LOGS'"
                      @click="turnOffSeparateLogs" />
