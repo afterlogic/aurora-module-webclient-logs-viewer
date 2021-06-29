@@ -4,7 +4,7 @@
       <q-card flat bordered class="card-edit-settings">
         <q-card-section>
           <div class="row q-mb-md">
-            <q-checkbox dense v-model="enableLogging" color="teal">
+            <q-checkbox dense v-model="enableLogging">
               <span v-t="'LOGSVIEWERWEBCLIENT.LABEL_LOGGING_ENABLE'"/>
             </q-checkbox>
           </div>
@@ -33,7 +33,7 @@
             </div>
           </div>
           <div class="row q-mb-md">
-            <q-checkbox dense v-model="enableEventLogging" color="teal">
+            <q-checkbox dense v-model="enableEventLogging">
               <q-item-label v-t="'LOGSVIEWERWEBCLIENT.LABEL_LOGGING_ENABLE_EVENTS'"/>
             </q-checkbox>
           </div>
