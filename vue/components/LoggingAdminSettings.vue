@@ -171,6 +171,10 @@ export default {
   methods: {
     hasChanges () {
       const data = settings.getLoggingData()
+      console.log(data, 'data')
+      console.log(this.enableLogging, 'this.enableLogging')
+      console.log(this.enableEventLogging, 'this.enableEventLogging')
+      console.log(this.verbosity.value, 'this.verbosity.value')
       return this.enableLogging !== data.enableLogging ||
           this.enableEventLogging !== data.enableEventLogging ||
           this.verbosity.value !== data.loggingLevel
