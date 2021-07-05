@@ -9,7 +9,7 @@ export default {
         tabName: 'logs-viewer',
         title: 'LOGSVIEWERWEBCLIENT.LABEL_LOGGING_SETTINGS_TAB',
         component () {
-          return import('src/../../../LogsViewerWebclient/vue/components/LoggingAdminSettings')
+          return import('./components/LoggingAdminSettings')
         },
       },
     ]
