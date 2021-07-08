@@ -13,7 +13,7 @@
             <div class="col-5 q-ml-xl">
               <q-select flat
                         outlined
-                        dense class="bg-white" v-model="verbosity"
+                        dense bg-color="white" v-model="verbosity"
                         :options="verbosityList"/>
             </div>
           </div>
