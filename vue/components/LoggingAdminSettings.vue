@@ -1,6 +1,9 @@
 <template>
   <q-scroll-area class="full-height full-width">
     <div class="q-pa-lg" style="min-width: 811px">
+      <div class="row q-mb-md">
+        <div class="col text-h5">{{ $t('LOGSVIEWERWEBCLIENT.HEADING_SETTINGS_TAB') }}</div>
+      </div>
       <q-card flat bordered class="card-edit-settings">
         <q-card-section>
           <div class="row q-mb-md">
@@ -58,7 +61,7 @@
               <div>
                 {{$t('LOGSVIEWERWEBCLIENT.LABEL_LOGGING_USERS_WITH_SEPARATE_LOG')}}
                 <li class="q-ml-sm"
-                    v-for="(user, index) in users"
+                    v-for="(user) in users"
                     style="list-style-type: none"
                       :key="user">
                   <span class="logging-user__link" @click="getLogFile(logFileName, false, user)">
