@@ -92,24 +92,20 @@
                :label="saving ? $t('COREWEBCLIENT.ACTION_SAVE_IN_PROGRESS') : $t('COREWEBCLIENT.ACTION_SAVE')" />
       </div>
     </div>
-    <UnsavedChangesDialog ref="unsavedChangesDialog"/>
   </q-scroll-area>
 </template>
 
 <script>
+import errors from 'src/utils/errors'
+import notification from 'src/utils/notification'
 import textUtil from 'src/utils/text'
 import webApi from 'src/utils/web-api'
+
 import settings from 'src/settings'
-import notification from 'src/utils/notification'
-import errors from 'src/utils/errors'
-import UnsavedChangesDialog from 'src/components/UnsavedChangesDialog'
-import _ from 'lodash';
 
 export default {
   name: 'LoggingAdminSettings',
-  components: {
-    UnsavedChangesDialog
-  },
+
   data () {
     return {
       verbosity: '',
@@ -133,18 +129,17 @@ export default {
       turningOffSeparateLogs: false
     }
   },
+
   mounted () {
     this.populate()
     this.getLogFilesData()
     this.getUsersWithSeparateLog()
   },
+
   beforeRouteLeave (to, from, next) {
-    if (this.hasChanges() && _.isFunction(this?.$refs?.unsavedChangesDialog?.openConfirmDiscardChangesDialog)) {
-      this.$refs.unsavedChangesDialog.openConfirmDiscardChangesDialog(next)
-    } else {
-      next()
-    }
+    this.doBeforeRouteLeave(to, from, next)
   },
+
   computed: {
     verbosityList () {
       return [
@@ -168,16 +163,31 @@ export default {
       }
     }
   },
+
   beforeDestroy() {
-    clearTimeout(this.timeOut);
+    clearTimeout(this.timeOut)
   },
+
   methods: {
+    /**
+     * Method is used in doBeforeRouteLeave mixin
+     */
     hasChanges () {
       const data = settings.getLoggingData()
       return this.enableLogging !== data.enableLogging ||
           this.enableEventLogging !== data.enableEventLogging ||
           this.verbosity.value !== data.loggingLevel
     },
+
+    /**
+     * Method is used in doBeforeRouteLeave mixin,
+     * do not use async methods - just simple and plain reverting of values
+     * !! hasChanges method must return true after executing revertChanges method
+     */
+    revertChanges () {
+      this.populate()
+    },
+
     populate () {
       const data = settings.getLoggingData()
       this.enableLogging = data.enableLogging
