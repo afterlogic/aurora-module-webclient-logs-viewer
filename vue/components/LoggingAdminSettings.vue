@@ -40,7 +40,7 @@
               <q-item-label v-t="'LOGSVIEWERWEBCLIENT.LABEL_LOGGING_ENABLE_EVENTS'"/>
             </q-checkbox>
           </div>
-          <div class="row q-mb-md">
+          <div class="row">
             <div>
               <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary"
                      :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_DOWNLOAD_EVENTS', {'SIZE': viewEventLogSizeBytes})"
@@ -56,7 +56,7 @@
                      v-t="'LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR'" @click="clearLog(true)" />
             </div>
           </div>
-          <div class="row q-mb-md" v-if="users.length">
+          <div class="row q-mt-md q-mb-sm" v-if="users.length">
             <div class="col-10">
               <div>
                 {{$t('LOGSVIEWERWEBCLIENT.LABEL_LOGGING_USERS_WITH_SEPARATE_LOG')}}
@@ -74,7 +74,7 @@
               </div>
             </div>
           </div>
-          <div class="row q-mb-md" v-if="users.length">
+          <div class="row" v-if="users.length">
             <div>
               <q-btn unelevated no-caps dense class="q-px-sm q-py-xs" :ripple="false" color="primary"
                     v-t="'LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_TURN_OFF_SEPARATE_LOGS'"
