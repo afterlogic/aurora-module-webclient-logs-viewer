@@ -2,7 +2,7 @@
   <q-scroll-area class="full-height full-width">
     <div class="q-pa-lg" style="min-width: 811px">
       <div class="row q-mb-md">
-        <div class="col text-h5">{{ $t('LOGSVIEWERWEBCLIENT.HEADING_SETTINGS_TAB') }}</div>
+        <div class="col text-h5" v-t="'LOGSVIEWERWEBCLIENT.HEADING_SETTINGS_TAB'"></div>
       </div>
       <q-card flat bordered class="card-edit-settings">
         <q-card-section>
@@ -13,11 +13,8 @@
           </div>
           <div class="row q-mb-md">
             <div class="col-1 q-my-sm" v-t="'LOGSVIEWERWEBCLIENT.LABEL_LOGGING_VERBOSITY'" />
-            <div class="col-5 q-ml-xl">
-              <q-select flat
-                        outlined
-                        dense bg-color="white" v-model="verbosity"
-                        :options="verbosityList"/>
+            <div class="col-2 q-ml-xl">
+              <q-select flat outlined dense bg-color="white" v-model="verbosity" :options="verbosityList"/>
             </div>
           </div>
           <div class="row q-mb-md">
@@ -31,8 +28,8 @@
                      :label="viewLogText" @click="getLog(false)" />
             </div>
             <div class="q-ml-md">
-              <q-btn unelevated no-caps dense class="q-px-sm q-py-xs" :ripple="false" color="primary"
-                    v-t="'LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR'" @click="clearLog(false)" />
+              <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary"
+                     :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR')" @click="clearLog(false)" />
             </div>
           </div>
           <div class="row q-mb-md">
@@ -52,23 +49,20 @@
                      :label="viewEventsLogText" @click="getLog(true)" />
             </div>
             <div class="q-ml-md">
-              <q-btn unelevated no-caps dense class="q-px-sm q-py-xs" :ripple="false" color="primary"
-                     v-t="'LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR'" @click="clearLog(true)" />
+              <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary"
+                     :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR')" @click="clearLog(true)" />
             </div>
           </div>
           <div class="row q-mt-md q-mb-sm" v-if="users.length">
             <div class="col-10">
               <div>
                 {{$t('LOGSVIEWERWEBCLIENT.LABEL_LOGGING_USERS_WITH_SEPARATE_LOG')}}
-                <li class="q-ml-sm"
-                    v-for="(user) in users"
-                    style="list-style-type: none"
-                      :key="user">
+                <li class="q-ml-sm" style="list-style-type: none" v-for="user  in users" :key="user">
                   <span class="logging-user__link" @click="getLogFile(logFileName, false, user)">
                     {{ user }}
                     <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
-                          {{ $t('LOGSVIEWERWEBCLIENT.INFO_LOGGING_CLICK_TO_DOWNLOAD') }}
-                        </q-tooltip>
+                      {{ $t('LOGSVIEWERWEBCLIENT.INFO_LOGGING_CLICK_TO_DOWNLOAD') }}
+                    </q-tooltip>
                   </span>
                 </li>
               </div>
@@ -76,13 +70,13 @@
           </div>
           <div class="row" v-if="users.length">
             <div>
-              <q-btn unelevated no-caps dense class="q-px-sm q-py-xs" :ripple="false" color="primary"
-                    v-t="'LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_TURN_OFF_SEPARATE_LOGS'"
+              <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary"
+                     :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_TURN_OFF_SEPARATE_LOGS')"
                      @click="turnOffSeparateLogs" />
             </div>
             <div class="q-ml-md">
-              <q-btn unelevated no-caps dense class="q-px-sm q-py-xs" :ripple="false" color="primary"
-                     v-t="'LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR_SEPARATE_LOGS'" @click="clearSeparateLogs" />
+              <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary"
+                     :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR_SEPARATE_LOGS')" @click="clearSeparateLogs" />
             </div>
           </div>
         </q-card-section>
@@ -265,11 +259,11 @@ export default {
         notification.showError(errors.getTextFromResponse(response))
       })
     },
-    getLog (eventsLog) {
+    getLog (isEventsLog) {
       if (!this.viewLogs) {
         this.viewLogs = true
         const parameters = {
-          EventsLog: eventsLog
+          EventsLog: isEventsLog
         }
         webApi.sendRequest({
           moduleName: 'LogsViewerWebclient',
@@ -287,15 +281,15 @@ export default {
         })
       }
     },
-    getLogFile (fileName, eventsLog, PublicId = '') {
+    getLogFile (fileName, isEventsLog, publicId = '') {
       if (!this.downloadingLogs) {
         this.downloadingLogs = true
         const parameters = {
-          EventsLog: eventsLog,
-          PublicId: PublicId
+          EventsLog: isEventsLog,
+          PublicId: publicId
         }
-        if (PublicId) {
-          fileName = PublicId + '-' + fileName
+        if (publicId) {
+          fileName = publicId + '-' + fileName
         }
         webApi.downloadExportFile({
           moduleName: 'LogsViewerWebclient',
