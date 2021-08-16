@@ -243,7 +243,10 @@ export default {
       })
     },
     setUpdateStatusTimer () {
-      this.timeOut = setTimeout(this.getLogFilesData, 5000)
+      clearTimeout(this.timeOut)
+      if (!this._isDestroyed) {
+        this.timeOut = setTimeout(this.getLogFilesData, 5000)
+      }
     },
     getUsersWithSeparateLog () {
       const parameters = {}
