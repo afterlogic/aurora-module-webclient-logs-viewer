@@ -170,7 +170,7 @@ CLoggingAdminSettingsView.prototype.downloadLog = function (bEventsLog, sPublicI
 			sFilePrefix = Types.pString(sPublicId) !== '' ? sPublicId + '-' : ''
 		;
 		FileSaver.saveAs(oBlob, bEventsLog ? Settings.EventLogFileName : sFilePrefix + Settings.LogFileName);
-	}, this, undefined, { Format: 'Raw' });
+	}, this, { Format: 'Raw' });
 };
 
 CLoggingAdminSettingsView.prototype.viewLog = function (bEventsLog)
