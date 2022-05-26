@@ -7,10 +7,10 @@ export default {
     return [
       {
         tabName: 'logs-viewer',
-        title: 'LOGSVIEWERWEBCLIENT.LABEL_LOGGING_SETTINGS_TAB',
-        component () {
-          return import('./components/LoggingAdminSettings')
-        },
+        tabTitle: 'LOGSVIEWERWEBCLIENT.LABEL_LOGGING_SETTINGS_TAB',
+        tabRouteChildren: [
+          { path: 'logs-viewer', component: () => import('./components/LoggingAdminSettings') },
+        ],
       },
     ]
   },
