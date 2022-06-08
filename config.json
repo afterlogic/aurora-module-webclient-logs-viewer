@@ -1,26 +1,50 @@
 {
-	"Disabled": [
-		false,
-		"bool"
-	],
-    "AppName": [
-		"",
-		"string"
-	],
-	"AuthMode": [
-		0,
-		"int"
-	],
-	"TokenMode": [
-		0,
-		"int"
-	],
-	"Url": [
-		"",
-		"string"
-	],
-	"ViewLastLogSize": [
-		1024000,
-		"int"
-	]
+  "Disabled": [
+    false,
+    "bool"
+  ],
+  "Disabled_Description": [
+    "",
+    "string"
+  ],
+  "AppName": [
+    "",
+    "string"
+  ],
+  "AppName_Description": [
+    "",
+    "string"
+  ],
+  "AuthMode": [
+    0,
+    "int"
+  ],
+  "AuthMode_Description": [
+    "",
+    "string"
+  ],
+  "TokenMode": [
+    0,
+    "int"
+  ],
+  "TokenMode_Description": [
+    "",
+    "string"
+  ],
+  "Url": [
+    "",
+    "string"
+  ],
+  "Url_Description": [
+    "",
+    "string"
+  ],
+  "ViewLastLogSize": [
+    1024000,
+    "int"
+  ],
+  "ViewLastLogSize_Description": [
+    "",
+    "string"
+  ]
 }
