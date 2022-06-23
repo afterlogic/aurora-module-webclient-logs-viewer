@@ -4,7 +4,7 @@
 		"bool"
 	],
 	"Disabled_Description": [
-		"",
+		"Setting to true disables the module",
 		"string"
 	],
 	"AppName": [
@@ -44,7 +44,7 @@
 		"int"
 	],
 	"ViewLastLogSize_Description": [
-		"",
+		"Defines size of the log file section to view, in bytes",
 		"string"
 	]
 }
