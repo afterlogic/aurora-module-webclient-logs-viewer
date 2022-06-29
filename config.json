@@ -7,38 +7,6 @@
 		"Setting to true disables the module",
 		"string"
 	],
-	"AppName": [
-		"",
-		"string"
-	],
-	"AppName_Description": [
-		"",
-		"string"
-	],
-	"AuthMode": [
-		0,
-		"int"
-	],
-	"AuthMode_Description": [
-		"",
-		"string"
-	],
-	"TokenMode": [
-		0,
-		"int"
-	],
-	"TokenMode_Description": [
-		"",
-		"string"
-	],
-	"Url": [
-		"",
-		"string"
-	],
-	"Url_Description": [
-		"",
-		"string"
-	],
 	"ViewLastLogSize": [
 		1024000,
 		"int"
