@@ -275,7 +275,7 @@ export default {
         }).then(result => {
           this.viewLogs = false
           if (result) {
-            const oWin = window.open('view-log', '', 'scrollbars=1')
+            const oWin = window.open('', 'view-log', 'scrollbars=1')
             oWin.document.write('<pre>' + result + '</pre>')
           }
         }, response => {
