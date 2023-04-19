@@ -12,6 +12,8 @@ namespace Aurora\Modules\LogsViewerWebclient;
  * @license https://afterlogic.com/products/common-licensing Afterlogic Software License
  * @copyright Copyright (c) 2023, Afterlogic Corp.
  *
+ * @property Settings $oModuleSettings
+ *
  * @package Modules
  */
 class Module extends \Aurora\System\Module\AbstractWebclientModule
@@ -39,7 +41,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
         \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::TenantAdmin);
 
         return array(
-            'ViewLastLogSize' => $this->getConfig('ViewLastLogSize', 1024000)
+            'ViewLastLogSize' => $this->oModuleSettings->ViewLastLogSize
         );
     }
 
@@ -75,7 +77,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 
     public function GetLog($EventsLog)
     {
-        $PartSize = $this->getConfig('ViewLastLogSize', 1024000);
+        $PartSize = $this->oModuleSettings->ViewLastLogSize;
         \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::TenantAdmin);
         return \Aurora\Modules\Core\Module::Decorator()->GetLog($EventsLog, $PartSize);
     }
