@@ -8,56 +8,101 @@
         <q-card-section>
           <div class="row q-mb-md">
             <q-checkbox dense v-model="enableLogging">
-              <span v-t="'LOGSVIEWERWEBCLIENT.LABEL_LOGGING_ENABLE'"/>
+              <span v-t="'LOGSVIEWERWEBCLIENT.LABEL_LOGGING_ENABLE'" />
             </q-checkbox>
           </div>
           <div class="row q-mb-md">
             <div class="col-1 q-my-sm" v-t="'LOGSVIEWERWEBCLIENT.LABEL_LOGGING_VERBOSITY'" />
             <div class="col-2 q-ml-xl">
-              <q-select flat outlined dense bg-color="white" v-model="verbosity" :options="verbosityList"/>
+              <q-select flat outlined dense bg-color="white" v-model="verbosity" :options="verbosityList" />
             </div>
           </div>
           <div class="row q-mb-md">
             <div>
-              <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary"
-                     :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_DOWNLOAD', {'SIZE': viewLogSizeBytes})"
-                     @click="getLogFile(logFileName, false)" />
+              <q-btn
+                unelevated
+                no-caps
+                dense
+                class="q-px-sm"
+                :ripple="false"
+                color="primary"
+                :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_DOWNLOAD', { SIZE: viewLogSizeBytes })"
+                @click="getLogFile(logFileName, false)"
+              />
             </div>
             <div class="q-ml-md">
-              <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary"
-                     :label="viewLogText" @click="getLog(false)" />
+              <q-btn
+                unelevated
+                no-caps
+                dense
+                class="q-px-sm"
+                :ripple="false"
+                color="primary"
+                :label="viewLogText"
+                @click="getLog(false)"
+              />
             </div>
             <div class="q-ml-md">
-              <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary"
-                     :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR')" @click="clearLog(false)" />
+              <q-btn
+                unelevated
+                no-caps
+                dense
+                class="q-px-sm"
+                :ripple="false"
+                color="primary"
+                :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR')"
+                @click="clearLog(false)"
+              />
             </div>
           </div>
           <div class="row q-mb-md">
             <q-checkbox dense v-model="enableEventLogging">
-              <q-item-label v-t="'LOGSVIEWERWEBCLIENT.LABEL_LOGGING_ENABLE_EVENTS'"/>
+              <q-item-label v-t="'LOGSVIEWERWEBCLIENT.LABEL_LOGGING_ENABLE_EVENTS'" />
             </q-checkbox>
           </div>
           <div class="row">
             <div>
-              <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary"
-                     :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_DOWNLOAD_EVENTS', {'SIZE': viewEventLogSizeBytes})"
-                     @click="getLogFile(eventLogFileName, true)" />
+              <q-btn
+                unelevated
+                no-caps
+                dense
+                class="q-px-sm"
+                :ripple="false"
+                color="primary"
+                :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_DOWNLOAD_EVENTS', { SIZE: viewEventLogSizeBytes })"
+                @click="getLogFile(eventLogFileName, true)"
+              />
             </div>
             <div class="q-ml-md">
-              <q-btn unelevated no-caps dense class="q-px-sm"
-                     :ripple="false" color="primary"
-                     :label="viewEventsLogText" @click="getLog(true)" />
+              <q-btn
+                unelevated
+                no-caps
+                dense
+                class="q-px-sm"
+                :ripple="false"
+                color="primary"
+                :label="viewEventsLogText"
+                @click="getLog(true)"
+              />
             </div>
             <div class="q-ml-md">
-              <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary"
-                     :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR')" @click="clearLog(true)" />
+              <q-btn
+                unelevated
+                no-caps
+                dense
+                class="q-px-sm"
+                :ripple="false"
+                color="primary"
+                :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR')"
+                @click="clearLog(true)"
+              />
             </div>
           </div>
           <div class="row q-mt-md q-mb-sm" v-if="users.length">
             <div class="col-10">
               <div>
-                {{$t('LOGSVIEWERWEBCLIENT.LABEL_LOGGING_USERS_WITH_SEPARATE_LOG')}}
-                <li class="q-ml-sm" style="list-style-type: none" v-for="user  in users" :key="user">
+                {{ $t('LOGSVIEWERWEBCLIENT.LABEL_LOGGING_USERS_WITH_SEPARATE_LOG') }}
+                <li class="q-ml-sm" style="list-style-type: none" v-for="user in users" :key="user">
                   <span class="logging-user__link" @click="getLogFile(logFileName, false, user)">
                     {{ user }}
                     <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
@@ -70,23 +115,46 @@
           </div>
           <div class="row" v-if="users.length">
             <div>
-              <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary"
-                     :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_TURN_OFF_SEPARATE_LOGS')"
-                     @click="turnOffSeparateLogs" />
+              <q-btn
+                unelevated
+                no-caps
+                dense
+                class="q-px-sm"
+                :ripple="false"
+                color="primary"
+                :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_TURN_OFF_SEPARATE_LOGS')"
+                @click="turnOffSeparateLogs"
+              />
             </div>
             <div class="q-ml-md">
-              <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary"
-                     :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR_SEPARATE_LOGS')" @click="clearSeparateLogs" />
+              <q-btn
+                unelevated
+                no-caps
+                dense
+                class="q-px-sm"
+                :ripple="false"
+                color="primary"
+                :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR_SEPARATE_LOGS')"
+                @click="clearSeparateLogs"
+              />
             </div>
           </div>
         </q-card-section>
       </q-card>
       <div class="q-pt-md text-right">
-        <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary" @click="save"
-               :label="$t('COREWEBCLIENT.ACTION_SAVE')" />
+        <q-btn
+          unelevated
+          no-caps
+          dense
+          class="q-px-sm"
+          :ripple="false"
+          color="primary"
+          @click="save"
+          :label="$t('COREWEBCLIENT.ACTION_SAVE')"
+        />
       </div>
     </div>
-    <q-inner-loading style="justify-content: flex-start;" :showing="saving">
+    <q-inner-loading style="justify-content: flex-start" :showing="saving">
       <q-linear-progress query />
     </q-inner-loading>
   </q-scroll-area>
@@ -103,7 +171,7 @@ import settings from 'src/settings'
 export default {
   name: 'LoggingAdminSettings',
 
-  data () {
+  data() {
     return {
       verbosity: '',
       logFileData: {},
@@ -123,42 +191,48 @@ export default {
       downloadingLogs: false,
       cleaningLogs: false,
       viewLogs: false,
-      turningOffSeparateLogs: false
+      turningOffSeparateLogs: false,
     }
   },
 
-  mounted () {
+  mounted() {
     this.populate()
     this.getLogFilesData()
     this.getUsersWithSeparateLog()
   },
 
-  beforeRouteLeave (to, from, next) {
+  beforeRouteLeave(to, from, next) {
     this.$root.doBeforeRouteLeave(to, from, next)
   },
 
   computed: {
-    verbosityList () {
+    verbosityList() {
       return [
         { value: 100, label: this.$t('LOGSVIEWERWEBCLIENT.LABEL_LOGGING_DEBUG') },
         { value: 50, label: this.$t('LOGSVIEWERWEBCLIENT.LABEL_LOGGING_WARNINGS') },
         { value: 20, label: this.$t('LOGSVIEWERWEBCLIENT.LABEL_LOGGING_ERRORS') },
       ]
     },
-    viewLogText () {
+    viewLogText() {
       if (this.logSizeBytes < this.viewLastLogSize) {
         return this.$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_VIEW')
       } else {
-        return this.$tc('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_VIEW_LAST', textUtil.getFriendlySize(this.viewLastLogSize), { SIZE: textUtil.getFriendlySize(this.viewLastLogSize) })
+        return this.$tc(
+          'LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_VIEW_LAST',
+          textUtil.getFriendlySize(this.viewLastLogSize),
+          { SIZE: textUtil.getFriendlySize(this.viewLastLogSize) }
+        )
       }
     },
-    viewEventsLogText () {
+    viewEventsLogText() {
       if (this.eventLogSizeBytes < this.viewLastLogSize) {
-        return this.$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_VIEW');
+        return this.$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_VIEW')
       } else {
-        return this.$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_VIEW_LAST', textUtil.getFriendlySize(this.viewLastLogSize), { SIZE: textUtil.getFriendlySize(this.viewLastLogSize) });
+        return this.$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_VIEW_LAST', textUtil.getFriendlySize(this.viewLastLogSize), {
+          SIZE: textUtil.getFriendlySize(this.viewLastLogSize),
+        })
       }
-    }
+    },
   },
 
   beforeDestroy() {
@@ -169,11 +243,13 @@ export default {
     /**
      * Method is used in doBeforeRouteLeave mixin
      */
-    hasChanges () {
+    hasChanges() {
       const data = settings.getLoggingData()
-      return this.enableLogging !== data.enableLogging ||
-          this.enableEventLogging !== data.enableEventLogging ||
-          this.verbosity.value !== data.loggingLevel
+      return (
+        this.enableLogging !== data.enableLogging ||
+        this.enableEventLogging !== data.enableEventLogging ||
+        this.verbosity.value !== data.loggingLevel
+      )
     },
 
     /**
@@ -181,11 +257,11 @@ export default {
      * do not use async methods - just simple and plain reverting of values
      * !! hasChanges method must return true after executing revertChanges method
      */
-    revertChanges () {
+    revertChanges() {
       this.populate()
     },
 
-    populate () {
+    populate() {
       const data = settings.getLoggingData()
       this.enableLogging = data.enableLogging
       this.enableEventLogging = data.enableEventLogging
@@ -196,170 +272,208 @@ export default {
         }
       })
     },
-    save () {
+    save() {
       if (!this.saving) {
         this.saving = true
         const parameters = {
           EnableLogging: this.enableLogging,
           EnableEventLogging: this.enableEventLogging,
-          LoggingLevel: this.verbosity.value
+          LoggingLevel: this.verbosity.value,
         }
-        webApi.sendRequest({
-          moduleName: 'Core',
-          methodName: 'UpdateSettings',
-          parameters: parameters,
-        }).then(result => {
-          this.saving = false
-          if (result) {
-            settings.saveLoggingData({
-              enableLogging: this.enableLogging,
-              enableEventLogging: this.enableEventLogging,
-              loggingLevel: this.verbosity.value
-            })
-            notification.showReport(this.$t('COREWEBCLIENT.REPORT_SETTINGS_UPDATE_SUCCESS'))
-          } else {
-            notification.showError(this.$t('COREWEBCLIENT.ERROR_SAVING_SETTINGS_FAILED'))
-          }
-        }, response => {
-          this.saving = false
-          notification.showError(errors.getTextFromResponse(response, this.$t('COREWEBCLIENT.ERROR_SAVING_SETTINGS_FAILED')))
-        })
+        webApi
+          .sendRequest({
+            moduleName: 'Core',
+            methodName: 'UpdateSettings',
+            parameters: parameters,
+          })
+          .then(
+            (result) => {
+              this.saving = false
+              if (result) {
+                settings.saveLoggingData({
+                  enableLogging: this.enableLogging,
+                  enableEventLogging: this.enableEventLogging,
+                  loggingLevel: this.verbosity.value,
+                })
+                notification.showReport(this.$t('COREWEBCLIENT.REPORT_SETTINGS_UPDATE_SUCCESS'))
+              } else {
+                notification.showError(this.$t('COREWEBCLIENT.ERROR_SAVING_SETTINGS_FAILED'))
+              }
+            },
+            (response) => {
+              this.saving = false
+              notification.showError(
+                errors.getTextFromResponse(response, this.$t('COREWEBCLIENT.ERROR_SAVING_SETTINGS_FAILED'))
+              )
+            }
+          )
       }
     },
-    getLogFilesData () {
-      webApi.sendRequest({
-        moduleName: 'LogsViewerWebclient',
-        methodName: 'GetLogFilesData',
-      }).then(result => {
-        if (result) {
-          this.logSizeBytes = result.LogSizeBytes
-          this.eventLogSizeBytes = result.EventLogSizeBytes
-          this.viewLogSizeBytes = textUtil.getFriendlySize(result.LogSizeBytes)
-          this.viewEventLogSizeBytes = textUtil.getFriendlySize(result.EventLogSizeBytes)
-          this.logFileName = result.LogFileName
-          this.eventLogFileName = result.EventLogFileName
-        }
-        this.setUpdateStatusTimer()
-      })
+    getLogFilesData() {
+      webApi
+        .sendRequest({
+          moduleName: 'LogsViewerWebclient',
+          methodName: 'GetLogFilesData',
+        })
+        .then((result) => {
+          if (result) {
+            this.logSizeBytes = result.LogSizeBytes
+            this.eventLogSizeBytes = result.EventLogSizeBytes
+            this.viewLogSizeBytes = textUtil.getFriendlySize(result.LogSizeBytes)
+            this.viewEventLogSizeBytes = textUtil.getFriendlySize(result.EventLogSizeBytes)
+            this.logFileName = result.LogFileName
+            this.eventLogFileName = result.EventLogFileName
+          }
+          this.setUpdateStatusTimer()
+        })
     },
-    setUpdateStatusTimer () {
+    setUpdateStatusTimer() {
       clearTimeout(this.timeOut)
       if (!this._isDestroyed) {
         this.timeOut = setTimeout(this.getLogFilesData, 5000)
       }
     },
-    getUsersWithSeparateLog () {
+    getUsersWithSeparateLog() {
       const parameters = {}
-      webApi.sendRequest({
-        moduleName: 'LogsViewerWebclient',
-        methodName: 'GetUsersWithSeparateLog',
-        parameters: parameters,
-      }).then(result => {
-        if (result) {
-          this.users = result
-        }
-      }, response => {
-        notification.showError(errors.getTextFromResponse(response))
-      })
+      webApi
+        .sendRequest({
+          moduleName: 'LogsViewerWebclient',
+          methodName: 'GetUsersWithSeparateLog',
+          parameters: parameters,
+        })
+        .then(
+          (result) => {
+            if (result) {
+              this.users = result
+            }
+          },
+          (response) => {
+            notification.showError(errors.getTextFromResponse(response))
+          }
+        )
     },
-    getLog (isEventsLog) {
+    getLog(isEventsLog) {
       if (!this.viewLogs) {
         this.viewLogs = true
         const parameters = {
-          EventsLog: isEventsLog
+          EventsLog: isEventsLog,
         }
-        webApi.sendRequest({
-          moduleName: 'LogsViewerWebclient',
-          methodName: 'GetLog',
-          parameters: parameters,
-        }).then(result => {
-          this.viewLogs = false
-          if (result) {
-            const oWin = window.open('', 'view-log', 'scrollbars=1')
-            oWin.document.write('<pre>' + result + '</pre>')
-          }
-        }, response => {
-          this.viewLogs = false
-          notification.showError(errors.getTextFromResponse(response))
-        })
+        webApi
+          .sendRequest({
+            moduleName: 'LogsViewerWebclient',
+            methodName: 'GetLog',
+            parameters: parameters,
+          })
+          .then(
+            (result) => {
+              this.viewLogs = false
+              if (result) {
+                const oWin = window.open('', 'view-log', 'scrollbars=1')
+                oWin.document.write('<pre>' + result + '</pre>')
+              }
+            },
+            (response) => {
+              this.viewLogs = false
+              notification.showError(errors.getTextFromResponse(response))
+            }
+          )
       }
     },
-    getLogFile (fileName, isEventsLog, publicId = '') {
+    getLogFile(fileName, isEventsLog, publicId = '') {
       if (!this.downloadingLogs) {
         this.downloadingLogs = true
         const parameters = {
           EventsLog: isEventsLog,
-          PublicId: publicId
+          PublicId: publicId,
         }
         if (publicId) {
           fileName = publicId + '-' + fileName
         }
-        webApi.downloadExportFile({
-          moduleName: 'LogsViewerWebclient',
-          methodName: 'GetLogFile',
-          parameters: parameters,
-          fileName: fileName,
-          format: 'Raw'
-        }).then(() => {
-          this.downloadingLogs = false
-        })
+        webApi
+          .downloadExportFile({
+            moduleName: 'LogsViewerWebclient',
+            methodName: 'GetLogFile',
+            parameters: parameters,
+            fileName: fileName,
+            format: 'Raw',
+          })
+          .then(() => {
+            this.downloadingLogs = false
+          })
       }
     },
-    clearLog (isEventsLog) {
+    clearLog(isEventsLog) {
       if (!this.cleaningLogs) {
         this.cleaningLogs = true
         const parameters = {}
         if (isEventsLog) {
           parameters.EventsLog = true
         }
-        webApi.sendRequest({
-          moduleName: 'LogsViewerWebclient',
-          methodName: 'ClearLog',
-          parameters
-        }).then(() => {
-          this.cleaningLogs = false
-        }, response => {
-          this.cleaningLogs = false
-          notification.showError(errors.getTextFromResponse(response))
-        })
+        webApi
+          .sendRequest({
+            moduleName: 'LogsViewerWebclient',
+            methodName: 'ClearLog',
+            parameters,
+          })
+          .then(
+            () => {
+              this.cleaningLogs = false
+            },
+            (response) => {
+              this.cleaningLogs = false
+              notification.showError(errors.getTextFromResponse(response))
+            }
+          )
       }
     },
-    turnOffSeparateLogs () {
+    turnOffSeparateLogs() {
       if (!this.turningOffSeparateLogs) {
         this.turningOffSeparateLogs = true
-        webApi.sendRequest({
-          moduleName: 'LogsViewerWebclient',
-          methodName: 'TurnOffSeparateLogs',
-        }).then(result => {
-          if (result === true) {
-            this.getUsersWithSeparateLog()
-          }
-          this.turningOffSeparateLogs = false
-        }, () => {
-          this.turningOffSeparateLogs = false
-        })
+        webApi
+          .sendRequest({
+            moduleName: 'LogsViewerWebclient',
+            methodName: 'TurnOffSeparateLogs',
+          })
+          .then(
+            (result) => {
+              if (result === true) {
+                this.getUsersWithSeparateLog()
+              }
+              this.turningOffSeparateLogs = false
+            },
+            () => {
+              this.turningOffSeparateLogs = false
+            }
+          )
       }
     },
-    clearSeparateLogs () {
+    clearSeparateLogs() {
       if (!this.cleaningLogs) {
         this.cleaningLogs = true
-        webApi.sendRequest({
-          moduleName: 'LogsViewerWebclient',
-          methodName: 'ClearSeparateLogs',
-        }).then(result => {
-          this.cleaningLogs = false
-          if (result === true) {
-            notification.showReport(this.$t('COREWEBCLIENT.REPORT_SETTINGS_UPDATE_SUCCESS'))
-          } else {
-            notification.showError(this.$t('COREWEBCLIENT.ERROR_SAVING_SETTINGS_FAILED'))
-          }
-        }, response => {
-          this.cleaningLogs = false
-          notification.showError(errors.getTextFromResponse(response, this.$t('COREWEBCLIENT.ERROR_SAVING_SETTINGS_FAILED')))
-        })
+        webApi
+          .sendRequest({
+            moduleName: 'LogsViewerWebclient',
+            methodName: 'ClearSeparateLogs',
+          })
+          .then(
+            (result) => {
+              this.cleaningLogs = false
+              if (result === true) {
+                notification.showReport(this.$t('COREWEBCLIENT.REPORT_SETTINGS_UPDATE_SUCCESS'))
+              } else {
+                notification.showError(this.$t('COREWEBCLIENT.ERROR_SAVING_SETTINGS_FAILED'))
+              }
+            },
+            (response) => {
+              this.cleaningLogs = false
+              notification.showError(
+                errors.getTextFromResponse(response, this.$t('COREWEBCLIENT.ERROR_SAVING_SETTINGS_FAILED'))
+              )
+            }
+          )
       }
     },
-  }
+  },
 }
 </script>
 
