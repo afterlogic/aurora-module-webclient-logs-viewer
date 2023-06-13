@@ -217,18 +217,16 @@ export default {
       if (this.logSizeBytes < this.viewLastLogSize) {
         return this.$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_VIEW')
       } else {
-        return this.$tc(
-          'LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_VIEW_LAST',
-          textUtil.getFriendlySize(this.viewLastLogSize),
-          { SIZE: textUtil.getFriendlySize(this.viewLastLogSize) }
-        )
+        return this.$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_VIEW_LAST', {
+          SIZE: textUtil.getFriendlySize(this.viewLastLogSize),
+        })
       }
     },
     viewEventsLogText() {
       if (this.eventLogSizeBytes < this.viewLastLogSize) {
         return this.$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_VIEW')
       } else {
-        return this.$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_VIEW_LAST', textUtil.getFriendlySize(this.viewLastLogSize), {
+        return this.$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_VIEW_LAST', {
           SIZE: textUtil.getFriendlySize(this.viewLastLogSize),
         })
       }
