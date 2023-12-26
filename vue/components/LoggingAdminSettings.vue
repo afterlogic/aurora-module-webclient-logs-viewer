@@ -27,7 +27,7 @@
                 :ripple="false"
                 color="primary"
                 :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_DOWNLOAD', { SIZE: viewLogSizeBytes })"
-                @click="getLogFile(logFileName, false)"
+                @click="getLogFile(logFileName, false, false)"
               />
             </div>
             <div class="q-ml-md">
@@ -39,7 +39,7 @@
                 :ripple="false"
                 color="primary"
                 :label="viewLogText"
-                @click="getLog(false)"
+                @click="getLog(false, false)"
               />
             </div>
             <div class="q-ml-md">
@@ -51,7 +51,46 @@
                 :ripple="false"
                 color="primary"
                 :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR')"
-                @click="clearLog(false)"
+                @click="clearLog(false, false)"
+              />
+            </div>
+          </div>
+          <div class="col-1 q-my-sm" v-t="'LOGSVIEWERWEBCLIENT.LABEL_LOGGING_ERROR_LOG'" />
+          <div class="row q-mb-md">
+            <div>
+              <q-btn
+                unelevated
+                no-caps
+                dense
+                class="q-px-sm"
+                :ripple="false"
+                color="primary"
+                :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_DOWNLOAD_ERRORS', { SIZE: viewErrorLogSizeBytes })"
+                @click="getLogFile(errorLogFileName, false, true)"
+              />
+            </div>
+            <div class="q-ml-md">
+              <q-btn
+                unelevated
+                no-caps
+                dense
+                class="q-px-sm"
+                :ripple="false"
+                color="primary"
+                :label="viewErrorsLogText"
+                @click="getLog(false, true)"
+              />
+            </div>
+            <div class="q-ml-md">
+              <q-btn
+                unelevated
+                no-caps
+                dense
+                class="q-px-sm"
+                :ripple="false"
+                color="primary"
+                :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR')"
+                @click="clearLog(false, true)"
               />
             </div>
           </div>
@@ -70,7 +109,7 @@
                 :ripple="false"
                 color="primary"
                 :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_DOWNLOAD_EVENTS', { SIZE: viewEventLogSizeBytes })"
-                @click="getLogFile(eventLogFileName, true)"
+                @click="getLogFile(eventLogFileName, true, false)"
               />
             </div>
             <div class="q-ml-md">
@@ -82,7 +121,7 @@
                 :ripple="false"
                 color="primary"
                 :label="viewEventsLogText"
-                @click="getLog(true)"
+                @click="getLog(true, false)"
               />
             </div>
             <div class="q-ml-md">
@@ -94,7 +133,7 @@
                 :ripple="false"
                 color="primary"
                 :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR')"
-                @click="clearLog(true)"
+                @click="clearLog(true, false)"
               />
             </div>
           </div>
@@ -177,11 +216,14 @@ export default {
       logFileData: {},
       logSizeBytes: 0,
       eventLogSizeBytes: 0,
+      errorLogSizeBytes: 0,
       viewLastLogSize: 0,
       viewLogSizeBytes: 0,
       viewEventLogSizeBytes: 0,
+      viewErrorLogSizeBytes: 0,
       logFileName: '',
       eventLogFileName: '',
+      errorLogFileName: '',
       enableLogging: false,
       enableEventLogging: false,
       loggingLevel: 100,
@@ -224,6 +266,15 @@ export default {
     },
     viewEventsLogText() {
       if (this.eventLogSizeBytes < this.viewLastLogSize) {
+        return this.$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_VIEW')
+      } else {
+        return this.$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_VIEW_LAST', {
+          SIZE: textUtil.getFriendlySize(this.viewLastLogSize),
+        })
+      }
+    },
+    viewErrorsLogText() {
+      if (this.errorLogSizeBytes < this.viewLastLogSize) {
         return this.$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_VIEW')
       } else {
         return this.$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_VIEW_LAST', {
@@ -317,10 +368,13 @@ export default {
           if (result) {
             this.logSizeBytes = result.LogSizeBytes
             this.eventLogSizeBytes = result.EventLogSizeBytes
+            this.errorLogSizeBytes = result.ErrorLogSizeBytes
             this.viewLogSizeBytes = textUtil.getFriendlySize(result.LogSizeBytes)
             this.viewEventLogSizeBytes = textUtil.getFriendlySize(result.EventLogSizeBytes)
+            this.viewErrorLogSizeBytes = textUtil.getFriendlySize(result.ErrorLogSizeBytes)
             this.logFileName = result.LogFileName
             this.eventLogFileName = result.EventLogFileName
+            this.errorLogFileName = result.ErrorLogFileName
           }
           this.setUpdateStatusTimer()
         })
@@ -350,11 +404,12 @@ export default {
           }
         )
     },
-    getLog(isEventsLog) {
+    getLog(isEventsLog, isErrorsLog) {
       if (!this.viewLogs) {
         this.viewLogs = true
         const parameters = {
           EventsLog: isEventsLog,
+          ErrorsLog: isErrorsLog,
         }
         webApi
           .sendRequest({
@@ -377,11 +432,12 @@ export default {
           )
       }
     },
-    getLogFile(fileName, isEventsLog, publicId = '') {
+    getLogFile(fileName, isEventsLog, isErrorsLog, publicId = '') {
       if (!this.downloadingLogs) {
         this.downloadingLogs = true
         const parameters = {
           EventsLog: isEventsLog,
+          ErrorsLog: isErrorsLog,
           PublicId: publicId,
         }
         if (publicId) {
@@ -400,12 +456,15 @@ export default {
           })
       }
     },
-    clearLog(isEventsLog) {
+    clearLog(isEventsLog, isErrorsLog) {
       if (!this.cleaningLogs) {
         this.cleaningLogs = true
         const parameters = {}
         if (isEventsLog) {
           parameters.EventsLog = true
+        }
+        if (isErrorsLog) {
+          parameters.ErrorsLog = true
         }
         webApi
           .sendRequest({
