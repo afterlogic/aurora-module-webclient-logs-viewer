@@ -27,7 +27,7 @@
                 :ripple="false"
                 color="primary"
                 :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_DOWNLOAD', { SIZE: viewLogSizeBytes })"
-                @click="getLogFile(logFileName, false, false)"
+                @click="getLogFile(logFileName, LogType.default)"
               />
             </div>
             <div class="q-ml-md">
@@ -39,7 +39,7 @@
                 :ripple="false"
                 color="primary"
                 :label="viewLogText"
-                @click="getLog(false, false)"
+                @click="getLog(LogType.default)"
               />
             </div>
             <div class="q-ml-md">
@@ -51,7 +51,7 @@
                 :ripple="false"
                 color="primary"
                 :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR')"
-                @click="clearLog(false, false)"
+                @click="clearLog(LogType.default)"
               />
             </div>
           </div>
@@ -66,7 +66,7 @@
                 :ripple="false"
                 color="primary"
                 :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_DOWNLOAD_ERRORS', { SIZE: viewErrorLogSizeBytes })"
-                @click="getLogFile(errorLogFileName, false, true)"
+                @click="getLogFile(errorLogFileName, LogType.error)"
               />
             </div>
             <div class="q-ml-md">
@@ -78,7 +78,7 @@
                 :ripple="false"
                 color="primary"
                 :label="viewErrorsLogText"
-                @click="getLog(false, true)"
+                @click="getLog(LogType.error)"
               />
             </div>
             <div class="q-ml-md">
@@ -90,7 +90,7 @@
                 :ripple="false"
                 color="primary"
                 :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR')"
-                @click="clearLog(false, true)"
+                @click="clearLog(LogType.error)"
               />
             </div>
           </div>
@@ -109,7 +109,7 @@
                 :ripple="false"
                 color="primary"
                 :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_DOWNLOAD_EVENTS', { SIZE: viewEventLogSizeBytes })"
-                @click="getLogFile(eventLogFileName, true, false)"
+                @click="getLogFile(eventLogFileName, LogType.event)"
               />
             </div>
             <div class="q-ml-md">
@@ -121,7 +121,7 @@
                 :ripple="false"
                 color="primary"
                 :label="viewEventsLogText"
-                @click="getLog(true, false)"
+                @click="getLog(LogType.event)"
               />
             </div>
             <div class="q-ml-md">
@@ -133,7 +133,7 @@
                 :ripple="false"
                 color="primary"
                 :label="$t('LOGSVIEWERWEBCLIENT.BUTTON_LOGGING_CLEAR')"
-                @click="clearLog(true, false)"
+                @click="clearLog(LogType.event)"
               />
             </div>
           </div>
@@ -206,6 +206,7 @@ import textUtil from 'src/utils/text'
 import webApi from 'src/utils/web-api'
 
 import settings from 'src/settings'
+import enums from '../enums'
 
 export default {
   name: 'LoggingAdminSettings',
@@ -234,6 +235,7 @@ export default {
       cleaningLogs: false,
       viewLogs: false,
       turningOffSeparateLogs: false,
+      LogType: enums.LogType
     }
   },
 
@@ -404,12 +406,11 @@ export default {
           }
         )
     },
-    getLog(isEventsLog, isErrorsLog) {
+    getLog(LogPrefix) {
       if (!this.viewLogs) {
         this.viewLogs = true
         const parameters = {
-          EventsLog: isEventsLog,
-          ErrorsLog: isErrorsLog,
+          LogPrefix: LogPrefix,
         }
         webApi
           .sendRequest({
@@ -432,12 +433,11 @@ export default {
           )
       }
     },
-    getLogFile(fileName, isEventsLog, isErrorsLog, publicId = '') {
+    getLogFile(fileName, LogPrefix, publicId = '') {
       if (!this.downloadingLogs) {
         this.downloadingLogs = true
         const parameters = {
-          EventsLog: isEventsLog,
-          ErrorsLog: isErrorsLog,
+          LogPrefix: LogPrefix,
           PublicId: publicId,
         }
         if (publicId) {
@@ -456,15 +456,11 @@ export default {
           })
       }
     },
-    clearLog(isEventsLog, isErrorsLog) {
+    clearLog(LogPrefix) {
       if (!this.cleaningLogs) {
         this.cleaningLogs = true
-        const parameters = {}
-        if (isEventsLog) {
-          parameters.EventsLog = true
-        }
-        if (isErrorsLog) {
-          parameters.ErrorsLog = true
+        const parameters = {
+          LogPrefix: LogPrefix
         }
         webApi
           .sendRequest({

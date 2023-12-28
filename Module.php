@@ -75,22 +75,22 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
         return \Aurora\Modules\Core\Module::Decorator()->GetLogFilesData();
     }
 
-    public function GetLogFile($EventsLog = false, $ErrorsLog = false, $PublicId = '')
+    public function GetLogFile($LogPrefix = '', $PublicId = '')
     {
         \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::TenantAdmin);
-        return \Aurora\Modules\Core\Module::Decorator()->GetLogFile($EventsLog, $ErrorsLog, $PublicId);
+        return \Aurora\Modules\Core\Module::Decorator()->GetLogFile($LogPrefix, $PublicId);
     }
 
-    public function GetLog($EventsLog, $ErrorsLog = false)
+    public function GetLog($LogPrefix = '')
     {
         $PartSize = $this->oModuleSettings->ViewLastLogSize;
         \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::TenantAdmin);
-        return \Aurora\Modules\Core\Module::Decorator()->GetLog($EventsLog, $ErrorsLog, $PartSize);
+        return \Aurora\Modules\Core\Module::Decorator()->GetLog($LogPrefix, $PartSize);
     }
 
-    public function ClearLog($EventsLog, $ErrorsLog = false)
+    public function ClearLog($LogPrefix = '')
     {
         \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::TenantAdmin);
-        return \Aurora\Modules\Core\Module::Decorator()->ClearLog($EventsLog, $ErrorsLog);
+        return \Aurora\Modules\Core\Module::Decorator()->ClearLog($LogPrefix);
     }
 }
