@@ -75,22 +75,22 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
         return \Aurora\Modules\Core\Module::Decorator()->GetLogFilesData();
     }
 
-    public function GetLogFile($LogPrefix = '', $PublicId = '')
+    public function GetLogFile($FilePrefix = '', $PublicId = '')
     {
         \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::TenantAdmin);
-        return \Aurora\Modules\Core\Module::Decorator()->GetLogFile($LogPrefix, $PublicId);
+        return \Aurora\Modules\Core\Module::Decorator()->GetLogFile($FilePrefix, $PublicId);
     }
 
-    public function GetLog($LogPrefix = '')
+    public function GetLog($FilePrefix = '')
     {
         $PartSize = $this->oModuleSettings->ViewLastLogSize;
         \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::TenantAdmin);
-        return \Aurora\Modules\Core\Module::Decorator()->GetLog($LogPrefix, $PartSize);
+        return \Aurora\Modules\Core\Module::Decorator()->GetLog($FilePrefix, $PartSize);
     }
 
-    public function ClearLog($LogPrefix = '')
+    public function ClearLog($FilePrefix = '')
     {
         \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::TenantAdmin);
-        return \Aurora\Modules\Core\Module::Decorator()->ClearLog($LogPrefix);
+        return \Aurora\Modules\Core\Module::Decorator()->ClearLog($FilePrefix);
     }
 }
