@@ -406,11 +406,11 @@ export default {
           }
         )
     },
-    getLog(LogPrefix) {
+    getLog(FilePrefix) {
       if (!this.viewLogs) {
         this.viewLogs = true
         const parameters = {
-          LogPrefix: LogPrefix,
+          FilePrefix: FilePrefix,
         }
         webApi
           .sendRequest({
@@ -433,11 +433,11 @@ export default {
           )
       }
     },
-    getLogFile(fileName, LogPrefix, publicId = '') {
+    getLogFile(fileName, FilePrefix, publicId = '') {
       if (!this.downloadingLogs) {
         this.downloadingLogs = true
         const parameters = {
-          LogPrefix: LogPrefix,
+          FilePrefix: FilePrefix,
           PublicId: publicId,
         }
         if (publicId) {
@@ -456,11 +456,11 @@ export default {
           })
       }
     },
-    clearLog(LogPrefix) {
+    clearLog(FilePrefix) {
       if (!this.cleaningLogs) {
         this.cleaningLogs = true
         const parameters = {
-          LogPrefix: LogPrefix
+          FilePrefix: FilePrefix
         }
         webApi
           .sendRequest({
