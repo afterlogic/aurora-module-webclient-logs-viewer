@@ -44,7 +44,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 
     public function GetSettings()
     {
-        \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::TenantAdmin);
+        \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::SuperAdmin);
 
         return array(
             'ViewLastLogSize' => $this->oModuleSettings->ViewLastLogSize
@@ -53,44 +53,44 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 
     public function GetUsersWithSeparateLog()
     {
-        \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::TenantAdmin);
+        \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::SuperAdmin);
         return \Aurora\Modules\Core\Module::Decorator()->GetUsersWithSeparateLog();
     }
 
     public function TurnOffSeparateLogs()
     {
-        \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::TenantAdmin);
+        \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::SuperAdmin);
         return \Aurora\Modules\Core\Module::Decorator()->TurnOffSeparateLogs();
     }
 
     public function ClearSeparateLogs()
     {
-        \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::TenantAdmin);
+        \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::SuperAdmin);
         return \Aurora\Modules\Core\Module::Decorator()->ClearSeparateLogs();
     }
 
     public function GetLogFilesData()
     {
-        \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::TenantAdmin);
+        \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::SuperAdmin);
         return \Aurora\Modules\Core\Module::Decorator()->GetLogFilesData();
     }
 
     public function GetLogFile($FilePrefix = '', $PublicId = '')
     {
-        \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::TenantAdmin);
+        \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::SuperAdmin);
         return \Aurora\Modules\Core\Module::Decorator()->GetLogFile($FilePrefix, $PublicId);
     }
 
     public function GetLog($FilePrefix = '')
     {
         $PartSize = $this->oModuleSettings->ViewLastLogSize;
-        \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::TenantAdmin);
+        \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::SuperAdmin);
         return \Aurora\Modules\Core\Module::Decorator()->GetLog($FilePrefix, $PartSize);
     }
 
     public function ClearLog($FilePrefix = '')
     {
-        \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::TenantAdmin);
+        \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::SuperAdmin);
         return \Aurora\Modules\Core\Module::Decorator()->ClearLog($FilePrefix);
     }
 }
