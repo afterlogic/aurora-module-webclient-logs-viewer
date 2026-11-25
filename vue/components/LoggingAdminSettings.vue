@@ -423,7 +423,11 @@ export default {
               this.viewLogs = false
               if (result) {
                 const oWin = window.open('', 'view-log', 'scrollbars=1')
-                oWin.document.write('<pre>' + result + '</pre>')
+                if (oWin) {
+                  const logText = oWin.document.createElement('pre')
+                  logText.textContent = result
+                  oWin.document.body.replaceChildren(logText)
+                }
               }
             },
             (response) => {
